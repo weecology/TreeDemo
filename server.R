@@ -10,11 +10,18 @@
 library(shiny)
 source("functions.R")
 
+#additional pages
+source("About.R")
+source("explore.R")
+source("datapage.R")
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
    
   #create pages
-  output$explore<-explore_page(output)
+  output$explore<-explore_page()
+  output$about<-about_page()
+  output$data_page<-data_page()
   
   #Field site maps
   output$map <- create_map()
@@ -23,8 +30,14 @@ shinyServer(function(input, output) {
   output$show_detections <- renderText({ input$show_detections })
   
   #Image gallery
-  image_paths<-get_thumbnails(site="MLBS")
+  image_paths<-get_thumbnails(site="TEAK")
   output$imageGrid <- renderGallery(image_paths)
+  
+  #Default selected image
+  #Lidar plot
+  current_plot_name<-"TEAK_058"
+  output$lidar<-plot_lidar(current_plot_name)
+  output$rgb<-plot_rgb(current_plot_name)
   
   #Obserer map click
   observeEvent(input$map_marker_click, {
@@ -35,12 +48,17 @@ shinyServer(function(input, output) {
     output$imageGrid <- renderGallery(image_paths)
   })
   
-  #Top plots
-  current_plot_name<-"WOOD_012"
+  #Observer gallery click
+
   
-  #Lidar plot
-  output$lidar<-plot_lidar(current_plot_name)
-  
-  #RGB
-  output$rgb<-rendertif(current_plot_name)
+  observeEvent(input$clickimg,{
+    print(paste("current image is",input$clickimg))
+    current_plot_name = str_match(input$clickimg,"(\\w+).")[,2]
+ 
+    #Lidar plot
+    output$lidar<-plot_lidar(current_plot_name)
+    
+    #RGB
+    output$rgb<-plot_rgb(current_plot_name)
+  })
 })

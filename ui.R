@@ -13,8 +13,6 @@ library(rgl)
 
 #Define thumbnail dir
 #Source additional pages
-source("About.R")
-source("explore.R")
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(theme = shinytheme("yeti"),
@@ -22,6 +20,6 @@ shinyUI(fluidPage(theme = shinytheme("yeti"),
   #Navbar to each page
   navbarPage("Airborne Tree Detection Demo",
              tabPanel("Explore",uiOutput('explore')),
-             tabPanel("Get the Model"),uiOutput('getdata'),
-             tabPanel("About",uiOutput('About'))
+             tabPanel("Get the Model"),uiOutput('data_page'),
+             tabPanel("About",uiOutput('about'))
   )))

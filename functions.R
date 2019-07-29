@@ -10,7 +10,6 @@ library(lidR)
 library(rgl)
 library(stringr)
 
-
 create_map<-function(){
   #basetile
   field_data<-st_read("data/field-sites.csv",options=c("X_POSSIBLE_NAMES=Longitude","Y_POSSIBLE_NAMES=Latitude"))
@@ -42,6 +41,12 @@ get_thumbnails<-function(site="All"){
     #Infer path from name
     path_to_tile<-paste("data/",site_dir,"/",current_plot_name,".laz",sep="")
     
+    #does it exist?
+    if(!file.exists(path_to_tile)){
+      paste(path_to_tile,"does not exist")
+      return(NULL)
+    }
+    
     #Read tile
     print(getwd())
     tryCatch(r<-readLAS(path_to_tile),error = function(e) stop(e,paste("Missing File",path_to_tile)))
@@ -51,7 +56,7 @@ get_thumbnails<-function(site="All"){
       try(rgl.close())
       plot(r,size=3)
       rglwidget()
-    }, outputArgs = list(width = "auto", height = "200px"))
+    })
   }
 
 plot_rgb<-function(current_plot_name){
@@ -73,13 +78,13 @@ plot_rgb<-function(current_plot_name){
 #Render gallery
 renderGallery<-function(image_paths){
   
-  #shuffle and show top 9 images
+  #shuffle and show top 8 images
   image_paths<-sample(image_paths)
-  selected_images<-image_paths[1:9]
+  selected_images<-image_paths[1:8]
   renderUI({
   fluidRow(
     lapply(selected_images, function(img) {
-      column(2,offset = 0.5, 
+      column(2,offset = 0.75, 
              tags$img(src=img, class="clickimg", 'data-value'=img, height="200px",width="auto")
       )
     })
