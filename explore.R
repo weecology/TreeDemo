@@ -2,19 +2,27 @@
 
 explore_page<-function(){
   renderUI({
-    mainPanel(
-      checkboxInput("show_detections", "Overlay Detections", FALSE,width="200px"),
-      splitLayout(rglwidgetOutput("lidar"),plotOutput("rgb")),
-      hr(),
-      h2("Select an image to predict"),
-      #custom defined UI function
-      uiOutput("imageGrid"),
-      tags$script(HTML(
-        "$(document).on('click', '.clickimg', function() {",
-        "  Shiny.onInputChange('clickimg', $(this).data('value'));",
-        "});")),
-      hr(),
-      titlePanel("Select a site to view tree detection results"),
-      leafletOutput("map")
-    )})
+    sidebarLayout(mainPanel = main_panel,sidebarPanel = side_panel)
+    })
 }
+
+#side panel
+side_panel<-sidebarPanel(
+  titlePanel("Select a site"),
+  leafletOutput("map"),
+  h2("Select an image"),
+  #custom defined UI function
+  uiOutput("imageGrid"),
+  tags$script(HTML(
+    "$(document).on('click', '.clickimg', function() {",
+    "  Shiny.onInputChange('clickimg', $(this).data('value'));",
+    "});"))
+)
+
+#main panel
+main_panel<-mainPanel(
+  checkboxInput("show_detections", "Overlay Detections", FALSE,width="200px"),
+  splitLayout(rglwidgetOutput("lidar"),plotOutput("rgb")),
+  hr(),
+  p("Explanation Text")
+)

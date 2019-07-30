@@ -14,6 +14,7 @@ source("functions.R")
 source("About.R")
 source("explore.R")
 source("datapage.R")
+source("upload.R")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -22,6 +23,7 @@ shinyServer(function(input, output) {
   output$explore<-explore_page()
   output$about<-about_page()
   output$data_page<-data_page()
+  output$upload<-upload_page()
   
   #Field site maps
   output$map <- create_map()

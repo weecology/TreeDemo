@@ -21,5 +21,6 @@ shinyUI(fluidPage(theme = shinytheme("yeti"),
   navbarPage("Airborne Tree Detection Demo",
              tabPanel("Explore",uiOutput('explore')),
              tabPanel("Get the Model"),uiOutput('data_page'),
+             tabPanel("Upload",uiOutput('upload')),
              tabPanel("About",uiOutput('about'))
   )))
