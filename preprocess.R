@@ -2,6 +2,9 @@
 library(jpeg)
 library(tiff)
 library(stringr)
+library(reticulate)
+library(TreeSegmentation)
+library(lidR)
 
 #Reader all tif images and make small jpeg thumbnails
 create_thumbnails<-function(){
@@ -19,7 +22,29 @@ create_thumbnails<-function(){
 create_thumbnails()
 
 #Clean LIDAR
-#Normalize and remove points above 40m
 
-#Predict RGB
+clean_lidar<-function(){
+  laz_file<-list.files("data",recursive = T,pattern=".laz",full.names = T)
+  for(f in laz_file){
+    r<-readLAS(f)
+    r<-ground_model(r)
+    r<-lasfilter(r,Z>2)
+    try(writeLAS(r,f))
+  }
+}
+
+clean_lidar()
+
+#Predict RGB for all images
+
+predict_images<-function(){
+  use_condaenv("Flask_api",required=TRUE)
+  source_python("utilities.py")
+  predict_all_images()
+}
+
+predict_images()
+
+
+
 

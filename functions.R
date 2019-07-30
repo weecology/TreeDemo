@@ -59,7 +59,7 @@ get_thumbnails<-function(site="All"){
     })
   }
 
-plot_rgb<-function(current_plot_name){
+plot_rgb<-function(current_plot_name,overlay_detections=TRUE){
   #Infer site
   site_dir<-str_match(current_plot_name,"(\\w+)_")[,2]
   
@@ -71,7 +71,16 @@ plot_rgb<-function(current_plot_name){
   
   s<-renderPlot({
     plotRGB(r)
+    #Overlay detections?
+    if(overlay_detections){
+      path_to_csv<-paste("data/",site_dir,"/",current_plot_name,".csv",sep="")
+      #Grab extent
+      e<-extent(r)
+      plot_bbox(path_to_csv,raster_extent =e)
+    }
   })
+  
+  
   return(s)
 }
 
@@ -91,3 +100,26 @@ renderGallery<-function(image_paths){
   )
 })
 }
+
+#plot bounding boxes
+bbox_wrap <- function(xmin,xmax,ymin,ymax) {
+  st_as_sfc(st_bbox(extent(xmin,xmax,ymin,ymax)))
+}
+    
+plot_bbox<-function(path_to_csv,raster_extent){
+  df<-read.csv(path_to_csv)
+  
+  #Convert image coords to utm
+  df$utm_xmin = df$xmin * 0.1 + raster_extent@xmin
+  df$utm_xmax = df$xmax * 0.1 + raster_extent@xmin
+  
+  #R and Python coord flip, numpy origin is topleft
+  df$utm_ymin = raster_extent@ymax - df$ymax * 0.1
+  df$utm_ymax = raster_extent@ymax - df$ymin * 0.1
+  
+  utm_coords<-df %>% select(utm_xmin,utm_xmax,utm_ymin,utm_ymax)
+  boxes<-apply(utm_coords, 1,function(x) {bbox_wrap(x['utm_xmin'],x['utm_xmax'],x['utm_ymin'],x['utm_ymax'])})
+  boxes<-do.call(c,boxes)
+  plot(boxes,add=T)
+}
+  

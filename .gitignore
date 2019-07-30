@@ -2,4 +2,8 @@
 
 data/
 www/
+*.h5
 
+#Python workfiles
+*.wpr
+.wpu
