@@ -33,6 +33,23 @@ get_thumbnails<-function(site="All"){
   return(image_paths)
 }
 
+#Render gallery
+renderGallery<-function(image_paths){
+  
+  #shuffle and show top 8 images
+  image_paths<-sample(image_paths)
+  selected_images<-image_paths[1:8]
+  renderUI({
+    fluidRow(
+      lapply(selected_images, function(img) {
+        column(5,offset = 0.75, 
+               tags$img(src=img, class="clickimg", 'data-value'=img, height="200px",width="auto")
+        )
+      })
+    )
+  })
+}
+
   #plot corresponding lidar
   plot_lidar<-function(current_plot_name){
     #Infer site
@@ -84,23 +101,6 @@ plot_rgb<-function(current_plot_name,overlay_detections=TRUE){
   return(s)
 }
 
-#Render gallery
-renderGallery<-function(image_paths){
-  
-  #shuffle and show top 8 images
-  image_paths<-sample(image_paths)
-  selected_images<-image_paths[1:8]
-  renderUI({
-  fluidRow(
-    lapply(selected_images, function(img) {
-      column(5,offset = 0.75, 
-             tags$img(src=img, class="clickimg", 'data-value'=img, height="200px",width="auto")
-      )
-    })
-  )
-})
-}
-
 #plot bounding boxes
 bbox_wrap <- function(xmin,xmax,ymin,ymax) {
   st_as_sfc(st_bbox(extent(xmin,xmax,ymin,ymax)))
@@ -116,6 +116,10 @@ plot_bbox<-function(path_to_csv,raster_extent){
   #R and Python coord flip, numpy origin is topleft
   df$utm_ymin = raster_extent@ymax - df$ymax * 0.1
   df$utm_ymax = raster_extent@ymax - df$ymin * 0.1
+  
+  if(nrow(df)==0){
+    return(NULL)
+  }
   
   utm_coords<-df %>% select(utm_xmin,utm_xmax,utm_ymin,utm_ymax)
   boxes<-apply(utm_coords, 1,function(x) {bbox_wrap(x['utm_xmin'],x['utm_xmax'],x['utm_ymin'],x['utm_ymax'])})
