@@ -74,16 +74,11 @@ shinyServer(function(input, output) {
     print(inFile)
     local_path <- file.path("upload", inFile$name)
     file.copy(inFile$datapath, local_path)
+    
     #Load model
     model<-load_environment()
     
-    #observe model status change
-    output$model_loading <- renderText({ 
-      paste("Model Loading:", "Complete")
-    })
-    
     #predict image
-    
     prediction_path<-prediction_wrapper(local_path)
     
     #View prediction
@@ -92,6 +87,7 @@ shinyServer(function(input, output) {
       plotRGB(r)
       plot_bbox(prediction_path, extent(r))
     })
+    
     #Assign to shiny object
     output$prediction_plot<-p
   })
