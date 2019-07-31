@@ -21,7 +21,6 @@ side_panel<-sidebarPanel(
 
 #main panel
 main_panel<-mainPanel(
-  checkboxInput("show_detections", "Overlay Detections", FALSE,width="200px"),
   splitLayout(plotOutput("rgb",height = "600"),rglwidgetOutput("lidar")),
   hr(),
   p(style = "font-size:25px","Airborne tree detection promises to unlock information on forests at unprecendented scales. 

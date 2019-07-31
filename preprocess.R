@@ -38,7 +38,7 @@ clean_lidar()
 #Predict RGB for all images
 
 predict_images<-function(){
-  use_condaenv("Flask_api",required=TRUE)
+  use_condaenv("flask_api",required=TRUE)
   source_python("utilities.py")
   predict_all_images()
 }
@@ -46,5 +46,12 @@ predict_images<-function(){
 predict_images()
 
 
+#Drape lidar images
+drape_cloud<-function(){
+  use_condaenv("flask_api",required=TRUE)
+  source_python("create_lidar_annotations.py")
+  drape_wrapper()
+}
 
+drape_cloud()
 

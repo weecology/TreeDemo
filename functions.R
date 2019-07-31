@@ -69,10 +69,13 @@ renderGallery<-function(image_paths){
     print(getwd())
     tryCatch(r<-readLAS(path_to_tile),error = function(e) stop(e,paste("Missing File",path_to_tile)))
 
+    #drop non-predicted points
+    g<-lasfilter(r,!label==0)
+    
     #Plot widget
     renderRglwidget({
       try(rgl.close())
-      plot(r,size=3)
+      plot(g,size=3,color="label",colorPalette=sample(rainbow(length(unique(g$label)))))
       rglwidget()
     })
   }
