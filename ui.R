@@ -15,12 +15,12 @@ library(rgl)
 #Source additional pages
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(theme = shinytheme("yeti"),
+shinyUI(fluidPage(theme = shinytheme("readable"),
   
   #Navbar to each page
   navbarPage("Airborne Tree Detection Demo",
              tabPanel("Explore",uiOutput('explore')),
-             tabPanel("Data",uiOutput('data_page')),
              tabPanel("Upload",uiOutput('upload')),
+             tabPanel("Data",uiOutput('data_page')),
              tabPanel("About",uiOutput('about'))
   )))

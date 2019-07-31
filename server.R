@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(dplyr)
 source("functions.R")
 
 #additional pages
@@ -46,13 +47,12 @@ shinyServer(function(input, output) {
     p<-input$map_marker_click
     cat("Site selected:",p$id)
     image_paths<-get_thumbnails(site=p$id)
+    
     #reset gallery
     output$imageGrid <- renderGallery(image_paths)
   })
   
   #Observer gallery click
-
-  
   observeEvent(input$clickimg,{
     print(paste("current image is",input$clickimg))
     current_plot_name = str_match(input$clickimg,"(\\w+).")[,2]
@@ -63,4 +63,39 @@ shinyServer(function(input, output) {
     #RGB
     output$rgb<-plot_rgb(current_plot_name)
   })
+  
+  #Observe file input
+  observeEvent(input$uploaded_image, {
+    print("Observed upload")
+    inFile <- input$uploaded_image
+    # if (is.null(inFile)){
+    #   return()
+    # }
+    print(inFile)
+    local_path <- file.path("upload", inFile$name)
+    file.copy(inFile$datapath, local_path)
+    #Load model
+    model<-load_environment()
+    
+    #observe model status change
+    output$model_loading <- renderText({ 
+      paste("Model Loading:", "Complete")
+    })
+    
+    #predict image
+    
+    prediction_path<-prediction_wrapper(local_path)
+    
+    #View prediction
+    r<-stack(local_path)
+    p<-renderPlot({
+      plotRGB(r)
+      plot_bbox(prediction_path, extent(r))
+    })
+    #Assign to shiny object
+    output$prediction_plot<-p
+  })
+  
 })
+
+

@@ -9,6 +9,7 @@ library(gridExtra)
 library(lidR)
 library(rgl)
 library(stringr)
+library(reticulate)
 
 create_map<-function(){
   #basetile
@@ -42,8 +43,8 @@ renderGallery<-function(image_paths){
   renderUI({
     fluidRow(
       lapply(selected_images, function(img) {
-        column(5,offset = 0.75, 
-               tags$img(src=img, class="clickimg", 'data-value'=img, height="200px",width="auto")
+        column(4,offset = 0.5, 
+               tags$img(src=img, class="clickimg", 'data-value'=img, height="170px",width="auto")
         )
       })
     )
@@ -121,9 +122,15 @@ plot_bbox<-function(path_to_csv,raster_extent){
     return(NULL)
   }
   
-  utm_coords<-df %>% select(utm_xmin,utm_xmax,utm_ymin,utm_ymax)
+  utm_coords<-df %>% dplyr::select(utm_xmin,utm_xmax,utm_ymin,utm_ymax)
   boxes<-apply(utm_coords, 1,function(x) {bbox_wrap(x['utm_xmin'],x['utm_xmax'],x['utm_ymin'],x['utm_ymax'])})
   boxes<-do.call(c,boxes)
-  plot(boxes,add=T)
+  plot(boxes,add=T,lwd=2)
 }
-  
+
+#image prediction
+load_environment<-function(){
+  print(paste("Working dir is ",getwd()))
+  use_condaenv("flask_api",required=TRUE)
+  source_python("utilities.py")
+}

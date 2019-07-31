@@ -34,12 +34,13 @@ def read_model(model_path, config):
         model = models.load_model(model_path, backbone_name='resnet50', convert=True, nms_threshold=config["nms_threshold"])
         return model
 
-def predict_image(model, raw_image, score_threshold = 0.1, max_detections= 200, return_plot=True):
+def predict_image(model, image_path, score_threshold = 0.1, max_detections= 200, return_plot=True):
         """
         Predict an image
         return_plot: Logical. If true, return a image object, else return bounding boxes
         """
         #predict
+        raw_image = cv2.imread(image_path)        
         image        = image_utils.preprocess_image(raw_image)
         image, scale = keras_retinanet_image.resize_image(image)
 
@@ -72,7 +73,23 @@ def predict_image(model, raw_image, score_threshold = 0.1, max_detections= 200, 
                 return raw_image                
         else:
                 return image_boxes
+
+def prediction_wrapper(image_path):
+        ##read model
+        config = read_config()        
+        model = read_model(config["model_path"], config) 
+        prediction = predict_image(model, image_path, score_threshold = 0.1, max_detections= 200,return_plot=False)
+        
+        #reshape and save to csv
+        df = pd.DataFrame(prediction)
+        df.columns = ["xmin","ymin","xmax","ymax"]
+
+        #save boxes
+        file_path = os.path.splitext(image_path)[0] + ".csv"
+        df.to_csv(file_path)
+        return(file_path)
                 
+        
 def predict_all_images():
         """
         loop through a dir and run all images
@@ -85,8 +102,7 @@ def predict_all_images():
         tifs = glob.glob(os.path.join("data","**","*.tif"))
         for tif in tifs:
                 print(tif)
-                raw_image = cv2.imread(tif)
-                prediction = predict_image(model, raw_image, score_threshold = 0.1, max_detections= 200,return_plot=False)
+                prediction = predict_image(model, tif, score_threshold = 0.1, max_detections= 200,return_plot=False)
                 
                 #reshape and save to csv
                 df = pd.DataFrame(prediction)
@@ -95,6 +111,3 @@ def predict_all_images():
                 #save boxes
                 file_path = os.path.splitext(tif)[0] + ".csv"
                 df.to_csv(file_path)
-
-if __name__ =="__main__":
-        predict_all_images()
