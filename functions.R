@@ -72,6 +72,9 @@ renderGallery<-function(image_paths){
     #drop non-predicted points
     g<-lasfilter(r,!label==0)
     
+    if(nrow(g@data)==0){
+      return(NULL)
+    }
     #Plot widget
     renderRglwidget({
       try(rgl.close())
@@ -132,8 +135,10 @@ plot_bbox<-function(path_to_csv,raster_extent){
 }
 
 #image prediction
-load_environment<-function(){
+predict_image<-function(local_path){
   print(paste("Working dir is ",getwd()))
   use_condaenv("flask_api",required=TRUE)
   source_python("utilities.py")
+  csv_path<-prediction_wrapper(local_path)
+  return(csv_path)
 }

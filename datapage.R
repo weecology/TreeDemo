@@ -7,7 +7,7 @@ data_page<-function(){
       h2("Training Source Code"),
       tags$a(href = "https://github.com/weecology/DeepLidar", "Github Repo"),
       h2("Trained model weights"),
-      tags$a(href = "https://github.com/weecology/DeepLidar", "Dropbox link"),
+      tags$a(href = "https://www.dropbox.com/s/aouiepcevmnnwvy/universal_model_july30.h5?dl=0", "Dropbox link"),
       h2("NEON Tree Benchmark dataset"),
       p("In Progress"),
       tags$a(href = "https://github.com/weecology/NeonTreeEvaluation", "Current Repo")

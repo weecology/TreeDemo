@@ -75,11 +75,8 @@ shinyServer(function(input, output) {
     local_path <- file.path("upload", inFile$name)
     file.copy(inFile$datapath, local_path)
     
-    #Load model
-    model<-load_environment()
-    
-    #predict image
-    prediction_path<-prediction_wrapper(local_path)
+    #Load model and predict
+    prediction_path<-predict_image(local_path)
     
     #View prediction
     r<-stack(local_path)
