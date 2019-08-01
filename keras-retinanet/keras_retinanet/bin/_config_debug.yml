@@ -1,0 +1,31 @@
+#Config file for DeepMeerkat train.py on local OSX
+
+#TODO implementation of sliding window config, currently hardcoded.
+#SlidingWindow
+patch_size: 250
+patch_overlap: 0.05
+rgb_res: 0.1
+
+#Debug plot image
+plot_image: False
+
+#Preprocessing routines
+preprocess:
+          zero_area: True
+          NDVI: False
+          NDVI_Threshold: 0.1
+
+#Training
+training_csvs: /Users/Ben/Documents/DeepForest/data/NEON_D03_OSBS_DP1_407000_3291000_classified_point_cloud_laz.csv
+rgb_tile_dir: data/
+subsample: 2
+snapshot: None
+batch_size: 1      
+epochs: 1
+save_snapshot_path: snapshots/
+backbone: resnet50
+
+#Evaluation
+evaluation_csvs: /Users/Ben/Documents/DeepForest/data/NEON_D03_OSBS_DP1_407000_3291000_classified_point_cloud_laz.csv
+validation_subsample: 2
+evaluation_tile_dir: data/
