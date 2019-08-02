@@ -21,6 +21,7 @@ side_panel<-sidebarPanel(
 
 #main panel
 main_panel<-mainPanel(
+  h2("Tree Predictions"),
   splitLayout(plotOutput("rgb",height = "600"),rglwidgetOutput("lidar")),
   hr(),
   p(style = "font-size:25px","Airborne tree detection promises to unlock information on forests at unprecendented scales. 
