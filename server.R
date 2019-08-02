@@ -11,6 +11,8 @@ library(shiny)
 library(dplyr)
 source("functions.R")
 
+options(shiny.sanitize.errors = FALSE)
+
 #additional pages
 source("About.R")
 source("explore.R")

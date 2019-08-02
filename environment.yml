@@ -11,6 +11,7 @@ dependencies:
   - jupyter
   - keras
   - numpy
+  - matplotlib
   - pandas
   - pillow
   - python=3.6

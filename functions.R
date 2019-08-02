@@ -103,8 +103,6 @@ plot_rgb<-function(current_plot_name,overlay_detections=TRUE){
       plot_bbox(path_to_csv,raster_extent =e)
     }
   })
-  
-  
   return(s)
 }
 
