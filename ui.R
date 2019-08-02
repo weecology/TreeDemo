@@ -8,8 +8,8 @@
 #
 
 library(shiny)
-library(shinythemes)
 library(rgl)
+library(shinythemes)
 
 #Define thumbnail dir
 #Source additional pages
