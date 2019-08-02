@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - click
   - fiona
   - gdal
   - geopandas
