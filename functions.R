@@ -42,8 +42,8 @@ renderGallery<-function(image_paths){
   renderUI({
     fluidRow(
       lapply(selected_images, function(img) {
-        column(4,offset = 0.5, 
-               tags$img(src=img, class="clickimg", 'data-value'=img,width="10%")
+        column(3,offset = 0.25, 
+               tags$img(src=img, class="clickimg", 'data-value'=img,width="100%")
         )
       })
     )
