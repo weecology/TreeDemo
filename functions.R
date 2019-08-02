@@ -134,7 +134,7 @@ plot_bbox<-function(path_to_csv,raster_extent){
 #image prediction
 predict_image<-function(local_path){
   print(paste("Working dir is ",getwd()))
-  use_condaenv("flask_api",required=TRUE)
+  use_condaenv("TreeDemo",required=TRUE)
   source_python("utilities.py")
   csv_path<-prediction_wrapper(local_path)
   return(csv_path)
