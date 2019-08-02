@@ -78,13 +78,11 @@ shinyServer(function(input, output) {
     file.copy(inFile$datapath, local_path)
     
     #Load model and predict
-    prediction_path<-predict_image(local_path)
+    save_path<-predict_image(local_path)
     
     #View prediction
-    r<-stack(local_path)
-    p<-renderPlot({
-      plotRGB(r)
-      plot_bbox(prediction_path, extent(r))
+    p<-renderImage({
+      list(src=save_path)
     })
     
     #Assign to shiny object

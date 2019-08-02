@@ -136,6 +136,6 @@ predict_image<-function(local_path){
   print(paste("Working dir is ",getwd()))
   use_condaenv("TreeDemo",required=TRUE)
   source_python("utilities.py")
-  csv_path<-prediction_wrapper(local_path)
-  return(csv_path)
+  save_path<-prediction_wrapper(local_path)
+  return(save_path)
 }

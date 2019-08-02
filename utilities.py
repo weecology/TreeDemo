@@ -78,18 +78,11 @@ def prediction_wrapper(image_path):
         ##read model
         config = read_config()        
         model = read_model(config["model_path"], config) 
-        prediction = predict_image(model, image_path, score_threshold = 0.1, max_detections= 200,return_plot=False)
-        
-        #reshape and save to csv
-        df = pd.DataFrame(prediction)
-        df.columns = ["xmin","ymin","xmax","ymax"]
-
-        #save boxes
-        file_path = os.path.splitext(image_path)[0] + ".csv"
-        df.to_csv(file_path)
-        return(file_path)
+        prediction = predict_image(model, image_path, score_threshold = 0.1, max_detections= 200,return_plot=True)
+        save_name = os.path.splitext(image_path)[0] + "_prediction.jpg"
+        cv2.imwrite(save_name,prediction)
+        return(save_name)
                 
-        
 def predict_all_images():
         """
         loop through a dir and run all images
