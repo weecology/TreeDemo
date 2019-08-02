@@ -12,10 +12,6 @@ side_panel<-sidebarPanel(
   leafletOutput("map"),
   h2("Select an image"),
   #custom defined UI function
-  tags$head(tags$style(
-    type="text/css",
-    "#image img {max-width: 100%; width: 100%; height: auto}"
-  )),
   uiOutput("imageGrid"),
   tags$script(HTML(
     "$(document).on('click', '.clickimg', function() {",

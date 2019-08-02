@@ -16,7 +16,7 @@ library(shinythemes)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(theme = shinytheme("readable"),
-  
+                  
   #Navbar to each page
   navbarPage("Airborne Tree Detection Demo",
              tabPanel("Explore",uiOutput('explore')),
