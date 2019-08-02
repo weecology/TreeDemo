@@ -13,7 +13,7 @@ about_page<-function(){
       h2("Contact"),
       p(style = "font-size:25px","benweinstein (at) weecology dot org"),
       h2("Funding"),
-      p(style="font-size:25px","This work was funded by a Moore-Sloan Data Science Grant to Ethan White (). The shiny app was hosted on Microsoft Azure with funding from Microsoft AI4Earth. Special thanks to Dan Morris for his feedback during development.")
+      p(style="font-size:25px","This research was supported by the Gordon and Betty Moore Foundation’s Data-Driven Discovery Initiative through grant GBMF4563 to E.P. White. The shiny app was hosted on Microsoft Azure with funding from Microsoft AI4Earth. Special thanks to Dan Morris for his feedback during development.")
     )
   })
 }
