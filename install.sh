@@ -41,6 +41,8 @@ sudo su - -c "R -e \"install.packages(c('imager'))\""
 sudo apt-get install -y libgdal-dev libgeos++-dev libudunits2-dev libproj-dev libx11-dev libgl-dev libglu-dev libfreetype6-dev libv8-3.14-dev libcairo2-dev
 sudo su - -c "R -e \"install.packages(c('lidR'))\""
 
+sudo su - -c "R -e \"install.packages(c('reticulate'))\""
+
 sudo apt-get install gdebi-core
 wget https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-1.5.9.923-amd64.deb
 sudo gdebi shiny-server-1.5.9.923-amd64.deb
@@ -58,3 +60,39 @@ sudo gdebi shiny-server-1.5.9.923-amd64.deb
 #Python install
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
 bash ~/miniconda.sh -b -p ~/miniconda
+
+#download TreeDemo data
+cd ~/TreeDemo
+curl https://www.dropbox.com/sh/8viv80t8gni3od7/AABe3S8zwAlFYdW-aUr1gAyFa?dl=0 -O -J -L
+
+#reset thumbnails
+#Preprocessing functions
+library(jpeg)
+library(tiff)
+library(stringr)
+library(reticulate)
+library(TreeSegmentation)
+library(lidR)
+
+#Reader all tif images and make small jpeg thumbnails
+create_thumbnails<-function(){
+  #load thumbnails
+  #find all tifs
+  all_tifs<-list.files("data",recursive = T,pattern=".tif",full.names = T)
+  for(x in all_tifs){
+    img <- readTIFF(x, native=TRUE)
+    plot_name = str_match(x,"(\\w+).tif")[,2]
+    new_path = paste("www/",plot_name,".jpeg",sep="")
+    writeJPEG(img, target = new_path, quality = 1)
+  }
+}
+
+create_thumbnails()
+
+#install python package
+cd ~/TreeDemo
+cd keras-retinanet/
+pip install .
+
+#copy model
+curl https://www.dropbox.com/s/aouiepcevmnnwvy/universal_model_july30.h5?dl=0 -O -J -L
