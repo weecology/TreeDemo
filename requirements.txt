@@ -1,0 +1,3 @@
+#requirements for R
+install.packages(
+c("dplyr","ggplot2","units","sf","raster","gridExtra","lidR","stringr","reticulate","rgdal","shinythemes","leaflet"))
