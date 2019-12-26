@@ -96,3 +96,5 @@ pip install .
 
 #copy model
 curl https://www.dropbox.com/s/aouiepcevmnnwvy/universal_model_july30.h5?dl=0 -O -J -L
+
+#nice to know restart sudo systemctl restart shiny-server
