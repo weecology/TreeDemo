@@ -22,5 +22,6 @@ shinyUI(fluidPage(theme = shinytheme("readable"),
              tabPanel("Explore",uiOutput('explore')),
              tabPanel("Upload",uiOutput('upload')),
              tabPanel("Data",uiOutput('data_page')),
+             tabPanel("NEON predictions",uiOutput('NEON_page')),
              tabPanel("About",uiOutput('about'))
-  )))
+               )))

@@ -15,7 +15,9 @@ create_map<-function(){
   field_data<-st_read("data/field-sites.csv",options=c("X_POSSIBLE_NAMES=Longitude","Y_POSSIBLE_NAMES=Latitude"))
   
   #Limit to sites we have
-  sites_in_folder<-list.dirs("data/",full.names = F)
+  sites_in_folder<-list.files("data/evaluation/RGB/",full.names = F)
+  sites_in_folder<-unique(str_match(sites_in_folder,"(\\w+)_")[,2])
+  
   field_data<-field_data %>% filter(Site.ID %in% sites_in_folder)
   m <- leaflet(field_data) %>% addTiles() %>% addMarkers(~Longitude,~Latitude,popup=~Site.ID,layerId = ~Site.ID)
   return(renderLeaflet(m))
@@ -50,44 +52,44 @@ renderGallery<-function(image_paths){
   })
 }
 
-  #plot corresponding lidar
-  plot_lidar<-function(current_plot_name){
-    #Infer site
-    site_dir<-str_match(current_plot_name,"(\\w+)_")[,2]
-    
-    #Infer path from name
-    path_to_tile<-paste("data/",site_dir,"/",current_plot_name,".laz",sep="")
-    
-    #does it exist?
-    if(!file.exists(path_to_tile)){
-      paste(path_to_tile,"does not exist")
-      return(NULL)
-    }
-    
-    #Read tile
-    print(getwd())
-    tryCatch(r<-readLAS(path_to_tile),error = function(e) stop(e,paste("Missing File",path_to_tile)))
-
-    #drop non-predicted points
-    g<-lasfilter(r,!label==0)
-    
-    if(nrow(g@data)==0){
-      return(NULL)
-    }
-    #Plot widget
-    renderRglwidget({
-      try(rgl.close())
-      plot(g,size=3,color="label",colorPalette=sample(rainbow(length(unique(g$label)))))
-      rglwidget()
-    })
+#plot corresponding lidar
+plot_lidar<-function(current_plot_name){
+  #Infer site
+  site_dir<-str_match(current_plot_name,"(\\w+)_")[,2]
+  
+  #Infer path from name
+  path_to_tile<-paste("data/evaluation/LiDAR/",current_plot_name,".laz",sep="")
+  
+  #does it exist?
+  if(!file.exists(path_to_tile)){
+    paste(path_to_tile,"does not exist")
+    return(NULL)
   }
+  
+  #Read tile
+  print(getwd())
+  tryCatch(r<-readLAS(path_to_tile),error = function(e) stop(e,paste("Missing File",path_to_tile)))
+
+  #drop non-predicted points
+  g<-lasfilter(r,!label==0)
+  
+  if(nrow(g@data)==0){
+    return(NULL)
+  }
+  #Plot widget
+  renderRglwidget({
+    try(rgl.close())
+    plot(g,size=3,color="label",colorPalette=sample(rainbow(length(unique(g$label)))))
+    rglwidget()
+  })
+}
 
 plot_rgb<-function(current_plot_name,overlay_detections=TRUE){
   #Infer site
   site_dir<-str_match(current_plot_name,"(\\w+)_")[,2]
   
   #Infer path from name
-  path_to_tile<-paste("data/",site_dir,"/",current_plot_name,".tif",sep="")
+  path_to_tile<-paste("data/evaluation/RGB/",current_plot_name,".tif",sep="")
   
   #read raster
   r<-stack(path_to_tile)
@@ -96,7 +98,7 @@ plot_rgb<-function(current_plot_name,overlay_detections=TRUE){
     plotRGB(r)
     #Overlay detections?
     if(overlay_detections){
-      path_to_csv<-paste("data/",site_dir,"/",current_plot_name,".csv",sep="")
+      path_to_csv<-paste("data/evaluation/RGB/",current_plot_name,".csv",sep="")
       #Grab extent
       e<-extent(r)
       plot_bbox(path_to_csv,raster_extent =e)

@@ -10,8 +10,9 @@ library(lidR)
 create_thumbnails<-function(){
   #load thumbnails
   #find all tifs
-  all_tifs<-list.files("data",recursive = T,pattern=".tif",full.names = T)
+  all_tifs<-list.files("data/evaluation/RGB/",recursive = T,pattern=".tif",full.names = T)
   for(x in all_tifs){
+    print(x)
     img <- readTIFF(x, native=TRUE)
     plot_name = str_match(x,"(\\w+).tif")[,2]
     new_path = paste("www/",plot_name,".jpeg",sep="") 
@@ -21,34 +22,18 @@ create_thumbnails<-function(){
 
 create_thumbnails()
 
-#Clean LIDAR
-
-clean_lidar<-function(){
-  laz_file<-list.files("data",recursive = T,pattern=".laz",full.names = T)
-  for(f in laz_file){
-    r<-readLAS(f)
-    r<-ground_model(r)
-    r<-lasfilter(r,Z>2)
-    try(writeLAS(r,f))
-  }
-}
-
-clean_lidar()
-
 #Predict RGB for all images
-
 predict_images<-function(){
-  use_condaenv("flask_api",required=TRUE)
+  use_condaenv("TreeDemo",required=TRUE)
   source_python("utilities.py")
   predict_all_images()
 }
 
 predict_images()
 
-
 #Drape lidar images
 drape_cloud<-function(){
-  use_condaenv("flask_api",required=TRUE)
+  use_condaenv("TreeDemo",required=TRUE)
   source_python("create_lidar_annotations.py")
   drape_wrapper()
 }

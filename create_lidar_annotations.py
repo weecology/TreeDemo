@@ -48,10 +48,16 @@ def run(csv_path, laz_path):
     write_label(point_cloud, laz_path)
 
 def drape_wrapper():
-    prediction_csvs = glob.glob("data/**/*.csv")
+    prediction_csvs = glob.glob("data/evaluation/RGB/*.csv")
+    LiDAR_dir = "data/evaluation/LiDAR/"
     for f in prediction_csvs:
         print(f)
-        laz_path = os.path.splitext(f)[0] + ".laz"
+        
+        #Construct filename
+        plot_name = os.path.splitext(os.path.basename(f))
+        laz_path = os.path.join(LiDAR_dir,plot_name)
+        laz_path =  "{}.laz".format(laz_path)
+        
         if os.path.exists(laz_path):
             run(csv_path = f, laz_path= laz_path)
         else:

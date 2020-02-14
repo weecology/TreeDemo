@@ -1,4 +1,5 @@
-## Prediction of Trees from local model
+## Prediction of Trees for Shiny app
+from deepforest import deepforest
 import utilities
 import cv2
 import matplotlib.pyplot as plt  

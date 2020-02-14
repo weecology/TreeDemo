@@ -5,6 +5,7 @@ channels:
 dependencies:
   - click
   - fiona
+  - pyfor
   - gdal
   - geopandas
   - geos
@@ -31,3 +32,4 @@ dependencies:
     - rasterio
     - slidingwindow
     - xmltodict
+    - DeepForest
