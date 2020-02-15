@@ -141,10 +141,32 @@ predict_image<-function(local_path){
 }
 
 #Neon prediction
-street_prediction<-function(){
-  public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nxanpr05it1jt829blfqz8/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
+
+neon_prediction<-function(){
+  public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nzcbj60rqk1inr3jre92g2/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
   street_map <- leaflet() %>%
     addTiles(urlTemplate=public_token) %>% addMarkers(lat = c(45.526913),lng=c(-122.646928))
+  return(renderLeaflet(street_map))
+}
+
+#Street tree prediction
+street_prediction<-function(){
+  
+  #Ground truth
+  trees<-read_sf("data/StreetTrees/test_trees.shp")
+  trees<-st_transform(trees,"+proj=longlat +datum=WGS84 +no_defs")
+  
+  predictions<-read_sf("data/StreetTrees/trained_model.shp")
+  predictions<-st_transform(predictions,"+proj=longlat +datum=WGS84 +no_defs")
+  
+  #Predictions
+  public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nxanpr05it1jt829blfqz8/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
+  tree_extent=extent(trees)
+  street_map <- leaflet() %>%
+    addTiles(urlTemplate=public_token) %>% addCircles(data=trees,radius = 2) %>% 
+    fitBounds(as.numeric(tree_extent@xmin),as.numeric(tree_extent@ymin),
+              as.numeric(tree_extent@xmax),as.numeric(tree_extent@ymax)) %>%
+    addPolylines(data=predictions,color="red",weight=1)
     return(renderLeaflet(street_map))
 }
 
