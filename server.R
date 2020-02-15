@@ -1,11 +1,6 @@
 #
 # This is the server logic of a Shiny web application. You can run the 
 # application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
 
 library(shiny)
 library(dplyr)
@@ -16,8 +11,9 @@ options(shiny.sanitize.errors = FALSE)
 #additional pages
 source("About.R")
 source("explore.R")
-source("datapage.R")
 source("upload.R")
+source("NEONPage.R")
+source("StreetTreesPage.R")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -25,8 +21,9 @@ shinyServer(function(input, output) {
   #create pages
   output$explore<-explore_page()
   output$about<-about_page()
-  output$data_page<-data_page()
   output$upload<-upload_page()
+  output$NEON<-NEON_page()
+  output$street_page<-street_page()
   
   #Field site maps
   output$map <- create_map()
@@ -89,6 +86,9 @@ shinyServer(function(input, output) {
     output$prediction_plot<-p
   })
   
+  #NEON prediction
+  output$NEON_prediction<-neon_prediction()
+  output$street_trees<-street_prediction()
 })
 
 

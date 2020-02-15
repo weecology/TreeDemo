@@ -9,7 +9,7 @@ library(lidR)
 library(rgl)
 library(stringr)
 library(reticulate)
-
+library(mapview)
 create_map<-function(){
   #basetile
   field_data<-st_read("data/field-sites.csv",options=c("X_POSSIBLE_NAMES=Longitude","Y_POSSIBLE_NAMES=Latitude"))
@@ -54,9 +54,7 @@ renderGallery<-function(image_paths){
 
 #plot corresponding lidar
 plot_lidar<-function(current_plot_name){
-  #Infer site
-  site_dir<-str_match(current_plot_name,"(\\w+)_")[,2]
-  
+
   #Infer path from name
   path_to_tile<-paste("data/evaluation/LiDAR/",current_plot_name,".laz",sep="")
   
@@ -141,3 +139,12 @@ predict_image<-function(local_path){
   save_path<-prediction_wrapper(local_path)
   return(save_path)
 }
+
+#Neon prediction
+street_prediction<-function(){
+  public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nxanpr05it1jt829blfqz8/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
+  street_map <- leaflet() %>%
+    addTiles(urlTemplate=public_token) %>% addMarkers(lat = c(45.526913),lng=c(-122.646928))
+    return(renderLeaflet(street_map))
+}
+

@@ -54,7 +54,7 @@ def drape_wrapper():
         print(f)
         
         #Construct filename
-        plot_name = os.path.splitext(os.path.basename(f))
+        plot_name = os.path.splitext(os.path.basename(f))[0]
         laz_path = os.path.join(LiDAR_dir,plot_name)
         laz_path =  "{}.laz".format(laz_path)
         

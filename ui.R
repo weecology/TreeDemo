@@ -2,10 +2,6 @@
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
 #
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
 
 library(shiny)
 library(rgl)
@@ -21,7 +17,7 @@ shinyUI(fluidPage(theme = shinytheme("readable"),
   navbarPage("Airborne Tree Detection Demo",
              tabPanel("Explore",uiOutput('explore')),
              tabPanel("Upload",uiOutput('upload')),
-             tabPanel("Data",uiOutput('data_page')),
-             tabPanel("NEON predictions",uiOutput('NEON_page')),
+             tabPanel("NEON Predictions",uiOutput('NEON')),
+             tabPanel("Portland Street Trees",uiOutput('street_page')),
              tabPanel("About",uiOutput('about'))
                )))

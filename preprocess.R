@@ -40,3 +40,4 @@ drape_cloud<-function(){
 
 drape_cloud()
 
+#Web mercator
