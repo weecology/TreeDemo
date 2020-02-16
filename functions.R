@@ -143,10 +143,19 @@ predict_image<-function(local_path){
 #Neon prediction
 
 neon_prediction<-function(){
+  
+  predictions<-read_sf("data/NEON/2018_OSBS_4_400000_3285000_image.shp")
+  predictions<-st_transform(predictions,"+proj=longlat +datum=WGS84 +no_defs")
+  
+  tree_extent<-extent(predictions)
+  
   public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nzcbj60rqk1inr3jre92g2/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
-  street_map <- leaflet() %>%
-    addTiles(urlTemplate=public_token) %>% addMarkers(lat = c(45.526913),lng=c(-122.646928))
-  return(renderLeaflet(street_map))
+  neon_map <- leaflet() %>%
+    addTiles(urlTemplate=public_token, options=tileOptions(maxZoom = 21)) %>% 
+    setView(zoom=18,lng=as.numeric(tree_extent@xmax),lat=as.numeric(tree_extent@ymin)) %>%
+    addPolylines(data=predictions,color="red",weight=1)
+  
+  return(renderLeaflet(neon_map))
 }
 
 #Street tree prediction
@@ -163,8 +172,8 @@ street_prediction<-function(){
   public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nxanpr05it1jt829blfqz8/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
   tree_extent=extent(trees)
   street_map <- leaflet() %>%
-    addTiles(urlTemplate=public_token) %>% addCircles(data=trees,radius = 2) %>% 
-    fitBounds(as.numeric(tree_extent@xmin),as.numeric(tree_extent@ymin),
+    addTiles(urlTemplate=public_token, options=tileOptions(maxZoom = 20)) %>% addCircles(data=trees,radius = 2) %>% 
+    setView(zoom=17,lng=as.numeric(tree_extent@xmax),lat=as.numeric(tree_extent@ymin)) %>% fitBounds(as.numeric(tree_extent@xmin),as.numeric(tree_extent@ymin),
               as.numeric(tree_extent@xmax),as.numeric(tree_extent@ymax)) %>%
     addPolylines(data=predictions,color="red",weight=1)
     return(renderLeaflet(street_map))
