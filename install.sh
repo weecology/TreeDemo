@@ -63,7 +63,6 @@ bash ~/miniconda.sh -b -p ~/miniconda
 
 #download TreeDemo data
 cd ~/TreeDemo
-curl https://www.dropbox.com/sh/8viv80t8gni3od7/AABe3S8zwAlFYdW-aUr1gAyFa?dl=0 -O -J -L
 
 #reset thumbnails
 #Preprocessing functions
@@ -89,9 +88,6 @@ create_thumbnails<-function(){
 
 create_thumbnails()
 
-#install python package
-cd ~/TreeDemo
-cd keras-retinanet/
-pip install .
+
 
 #nice to know restart sudo systemctl restart shiny-server
