@@ -1,6 +1,6 @@
 #Ignore images
 
-data/
+data/evaluation/
 *.h5
 
 #Python workfiles
