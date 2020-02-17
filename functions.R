@@ -9,7 +9,7 @@ library(lidR)
 library(rgl)
 library(stringr)
 library(reticulate)
-library(mapview)
+
 create_map<-function(){
   #basetile
   field_data<-st_read("data/field-sites.csv",options=c("X_POSSIBLE_NAMES=Longitude","Y_POSSIBLE_NAMES=Latitude"))

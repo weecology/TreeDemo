@@ -78,7 +78,7 @@ library(lidR)
 create_thumbnails<-function(){
   #load thumbnails
   #find all tifs
-  all_tifs<-list.files("data",recursive = T,pattern=".tif",full.names = T)
+  all_tifs<-list.files("data/evaluation/RGB/",recursive = T,pattern=".tif",full.names = T)
   for(x in all_tifs){
     img <- readTIFF(x, native=TRUE)
     plot_name = str_match(x,"(\\w+).tif")[,2]
@@ -93,8 +93,5 @@ create_thumbnails()
 cd ~/TreeDemo
 cd keras-retinanet/
 pip install .
-
-#copy model
-curl https://www.dropbox.com/s/aouiepcevmnnwvy/universal_model_july30.h5?dl=0 -O -J -L
 
 #nice to know restart sudo systemctl restart shiny-server
