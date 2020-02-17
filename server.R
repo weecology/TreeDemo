@@ -87,7 +87,16 @@ shinyServer(function(input, output) {
   })
   
   #NEON prediction
-  output$NEON_prediction<-neon_prediction()
+  output$NEON_prediction<-neon_prediction("OSBS")
+  
+  #Observe NEON site selector
+  #Observer gallery click
+  observeEvent(input$NEON_site,{
+    print(paste("Current NEON site is",input$NEON_site))
+    site_name = str_match(input$NEON_site,"\\((\\w+).")[,2]
+    output$NEON_prediction<-neon_prediction(site_name)
+  })
+  
   output$street_trees<-street_prediction()
 })
 
