@@ -3,9 +3,7 @@ library(jpeg)
 library(tiff)
 library(stringr)
 library(reticulate)
-library(TreeSegmentation)
 library(lidR)
-librry(geojsonsf)
 
 #Reader all tif images and make small jpeg thumbnails
 create_thumbnails<-function(){
@@ -48,10 +46,12 @@ project_shp<-function(){
   prediction_list<-list()
   for(x in 1:length(available_shp)){
     predictions <- read_sf(available_shp[x])
-    predictions<-st_transform(predictions,"+proj=longlat +datum=WGS84 +no_defs")
+    predictions<-st_transform(predictions,crs=3857)
     prediction_list[[x]]<-predictions
   }
   
   all_predictions<-do.call(rbind, prediction_list)
-  write_sf(all_predictions,"data/NEON/allpredictions.json",driver="GeoJSON")
+  write_sf(all_predictions,"data/NEON/allpredictions.shp")
 }
+
+project_shp()
