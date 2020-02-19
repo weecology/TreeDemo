@@ -14,6 +14,7 @@ NEON_page<-function(){
                             "Great Plains, North Dakota (NOGP)",
                             "Southern Bottomlands, Alabama (TALL)",
                             "Southwest Desert, Arizona (SRER)",
+                            "Prarie, Kansas (KONZ)",
                             "Logged Conifer, Washington (ABBY)",
                             "Southern Grassland, Texas (CLBJ)")),
       leafletOutput("NEON_prediction", height=1000)
