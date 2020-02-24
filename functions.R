@@ -162,6 +162,15 @@ neon_prediction<-function(site_name="OSBS"){
   return(renderLeaflet(neon_map))
 }
 
+height_distribution <- function(site_name="OSBS"){
+  available_shp<-list.files("data/NEON/",pattern=".shp",full.names = T)
+  site_shp <- available_shp[str_detect(available_shp,site_name)]
+  predictions<-read_sf(site_shp)
+  predictions<-st_transform(predictions,"+proj=longlat +datum=WGS84 +no_defs")
+  p<-ggplot(predictions) + geom_histogram(aes(x=height)) + labs(x="Height (m)") + ggtitle(paste("Estimated Height Distribution (n=",nrow(predictions),")",sep=""))
+  return(renderPlot(p))
+}
+
 #Street tree prediction
 street_prediction<-function(){
   
