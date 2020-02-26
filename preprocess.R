@@ -5,6 +5,7 @@ library(stringr)
 library(reticulate)
 library(lidR)
 library(raster)
+library(sf)
 
 #Reader all tif images and make small jpeg thumbnails
 create_thumbnails<-function(){
@@ -46,7 +47,9 @@ project_shp<-function(){
   available_shp<-list.files("data/NEON/",pattern=".shp",full.names = T)
   prediction_list<-list()
   for(x in 1:length(available_shp)){
-    predictions <- read_sf(available_shp[x])
+    predictions <- sf::read_sf(available_shp[x])
+    print(available_shp[x])
+    print(projection(predictions))
     predictions<-st_transform(predictions,crs=3857)
     prediction_list[[x]]<-predictions[,c("label","height")]
   }
@@ -56,6 +59,26 @@ project_shp<-function(){
 }
 
 project_shp()
+
+predictions_WREF <- sf::read_sf("data/NEON/2019_WREF_3_582000_5073000_image.shp")
+predictions_WREF<-predictions_WREF[,c("label","height")]
+predictions_WREF<-st_transform(predictions_WREF,crs=3857)
+
+predictions_ABBY <- sf::read_sf("data/NEON/2018_ABBY_2_557000_5065000_image.shp")
+predictions_ABBY<-predictions_ABBY[,c("label","height")]
+predictions_ABBY<-st_transform(predictions_ABBY,crs=3857)
+
+
+predictions_OSBS <- sf::read_sf("data/NEON/2018_OSBS_4_400000_3285000_image.shp")
+predictions_OSBS<-predictions_OSBS[,c("label","height")]
+predictions_OSBS<-st_transform(predictions_OSBS,crs=3857)
+
+utm_10m<-rbind(predictions_WREF,predictions_ABBY,predictions_OSBS)
+#utm_10m<-st_transform(utm_10m,crs=3857)
+write_sf(utm_10m,"data/NEON/utm10_crossOSBS.shp",driver="ESRI SHAPEFILE")
+
+mapview(utm_10m)
+
 
 #Project and merge mapbox tiles
 available_tif<-list.files("/Users/ben/Dropbox/Weecology/mapbox",pattern=".tif",full.names = T)
@@ -70,8 +93,5 @@ for(path in available_tif[2:length(available_tif)]){
   
 }
 
-for(x in 1:1000){
-  plot(all_predictions[sample(nrow(all_predictions),1),])
-  Sys.sleep(2)
-}
+
   

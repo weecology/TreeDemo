@@ -25,11 +25,10 @@ shinyServer(function(input, output) {
   output$NEON<-NEON_page()
   output$street_page<-street_page()
   
+  ### Explore ###
+  
   #Field site maps
   output$map <- create_map()
-  
-  #Show detections?
-  output$show_detections <- renderText({ input$show_detections })
   
   #Image gallery
   image_paths<-get_thumbnails(site="TEAK")
@@ -63,6 +62,8 @@ shinyServer(function(input, output) {
     output$rgb<-plot_rgb(current_plot_name)
   })
   
+  ### Upload ###
+  
   #Observe file input
   observeEvent(input$uploaded_image, {
     print("Observed upload")
@@ -86,18 +87,46 @@ shinyServer(function(input, output) {
     output$prediction_plot<-p
   })
   
-  #NEON prediction
-  output$NEON_prediction<-neon_prediction("OSBS")
+  ### NEON Predictions ###
+  #Top map
+  output$NEONprediction<-create_map(addRGB = T)
   
-  #Observe NEON site selector
-  #Observer gallery click
-  observeEvent(input$NEON_site,{
-    print(paste("Current NEON site is",input$NEON_site))
-    site_name = str_match(input$NEON_site,"\\((\\w+).")[,2]
-    output$NEON_prediction<-neon_prediction(site_name)
-    output$HeightDistribution<-height_distribution(site_name)
+  #Zoom to site
+  observeEvent(input$NEONprediction_marker_click, {
+    p<-input$NEONprediction_marker_click
+    leafletProxy("NEONprediction") %>% setView(p$lng,p$lat,zoom=15)
   })
   
+  mapzoom <-  reactive({
+    if(is.null(input$NEONprediction_zoom)){
+      return(4)
+    } else{
+      return(input$NEONprediction_zoom)
+    }
+  })
+  
+  mapsite <-  reactive({
+    if(is.null(input$NEONprediction_marker_click)){
+      return("OSBS")
+    } else{
+      return(input$NEONprediction_marker_click$id)
+    }
+  })
+  
+  observe({
+    current_zoom <- mapzoom()
+    current_site <- mapsite()
+   if(current_zoom > 18){
+      neon_prediction(leaflet_proxy = leafletProxy("NEONprediction"), current_site)
+    } else{
+      print(paste("Current site is:",current_site,"Current zoom is:",current_zoom))
+    }
+  })
+  
+
+  
+
+    
   output$street_trees<-street_prediction()
 })
 

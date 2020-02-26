@@ -10,7 +10,7 @@ library(rgl)
 library(stringr)
 library(reticulate)
 
-create_map<-function(){
+create_map<-function(addRGB=F){
   #basetile
   field_data<-st_read("data/field-sites.csv",options=c("X_POSSIBLE_NAMES=Longitude","Y_POSSIBLE_NAMES=Latitude"))
   
@@ -20,6 +20,11 @@ create_map<-function(){
   
   field_data<-field_data %>% filter(Site.ID %in% sites_in_folder)
   m <- leaflet(field_data) %>% addTiles() %>% addMarkers(~Longitude,~Latitude,popup=~Site.ID,layerId = ~Site.ID)
+  
+  if(addRGB){
+    public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nzcbj60rqk1inr3jre92g2/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
+    m <- m %>% addTiles(urlTemplate=public_token, options=tileOptions(maxZoom = 21))
+  }
   return(renderLeaflet(m))
 }
 
@@ -142,7 +147,7 @@ predict_image<-function(local_path){
 
 #Neon prediction
 
-neon_prediction<-function(site_name="OSBS"){
+neon_prediction<-function(leaflet_proxy, site_name="OSBS"){
   
   available_shp<-list.files("data/NEON/",pattern=".shp",full.names = T)
   site_shp <- available_shp[str_detect(available_shp,site_name)]
@@ -150,16 +155,13 @@ neon_prediction<-function(site_name="OSBS"){
   predictions<-st_transform(predictions,"+proj=longlat +datum=WGS84 +no_defs")
   
   #Set view
-  tree_extent<-extent(predictions)
-  x_location <- mean(c(as.numeric(tree_extent@xmax),as.numeric(tree_extent@xmin)))
-  y_location <- mean(c(as.numeric(tree_extent@ymax),as.numeric(tree_extent@ymin)))
+  #tree_extent<-extent(predictions)
+  #x_location <- mean(c(as.numeric(tree_extent@xmax),as.numeric(tree_extent@xmin)))
+  #y_location <- mean(c(as.numeric(tree_extent@ymax),as.numeric(tree_extent@ymin)))
+  #setView(zoom=19,lng=x_location,lat=y_location)
+  neon_map <- leaflet_proxy %>% addPolylines(data=predictions,color="red",weight=2)
   
-  public_token = "https://api.mapbox.com/styles/v1/bweinstein/ck6nzcbj60rqk1inr3jre92g2/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYndlaW5zdGVpbiIsImEiOiJ2THJ4dWRNIn0.5Pius_0u0NxydUzkY9pkWA"
-  neon_map <- leaflet() %>%
-    addTiles(urlTemplate=public_token, options=tileOptions(maxZoom = 21)) %>% 
-    setView(zoom=19,lng=x_location,lat=y_location)%>% addPolylines(data=predictions,color="red",weight=2)
-  
-  return(renderLeaflet(neon_map))
+  return(neon_map)
 }
 
 height_distribution <- function(site_name="OSBS"){

@@ -4,7 +4,7 @@ NEON_page<-function(){
     fluidPage(
       titlePanel("NEON Crown Maps"),
       p("The central aim of this project is to provide crown maps for the sites at the National Ecological Observation Network. Once completed, these data will be available for the community. Here we show sample predictions from 15 sites."),
-      p("Please allow 10-15 seconds for the browser to load on selection, as the tiles are very large and contain tens of thousands of trees."),
+      p("Please allow 10-15 seconds for the browser to load on selection, as the tiles are very large and contain tens of thousands of trees. The image may turn gray during selection, please be patient."),
       selectInput(inputId = "NEON_site",label="NEON Site",
                   choices=c("Longleaf Pine, Florida (OSBS)",
                             "Sierra Nevadas, California (TEAK)",
@@ -20,7 +20,7 @@ NEON_page<-function(){
                             "Riparian Wetland, Alaska (BONA)",
                             "Logged Conifer, Washington (ABBY)",
                             "Southern Grassland, Texas (CLBJ)")),
-      leafletOutput("NEON_prediction", height=1000),
+      leafletOutput("NEONprediction", height=1000),
       plotOutput("HeightDistribution",width = "50%")
   )})
 }
