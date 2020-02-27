@@ -91,16 +91,22 @@ shinyServer(function(input, output) {
   #Top map
   output$NEONprediction<-create_map(addRGB = T)
   
+  #Return to top map
+  observeEvent(input$return,{
+    leafletProxy("NEONprediction") %>% setView(-97,50,zoom=4)
+  })
+  
   #Zoom to site
   observeEvent(input$NEONprediction_marker_click, {
     p<-input$NEONprediction_marker_click
-    leafletProxy("NEONprediction") %>% setView(p$lng,p$lat,zoom=15)
+    leafletProxy("NEONprediction") %>% setView(p$lng,p$lat,zoom=12)
   })
   
   mapzoom <-  reactive({
     if(is.null(input$NEONprediction_zoom)){
-      return(4)
+      return(5)
     } else{
+      print(paste("Current zoom is:",input$NEONprediction_zoom))
       return(input$NEONprediction_zoom)
     }
   })
@@ -113,20 +119,34 @@ shinyServer(function(input, output) {
     }
   })
   
-  observe({
-    current_zoom <- mapzoom()
-    current_site <- mapsite()
-   if(current_zoom > 18){
-      neon_prediction(leaflet_proxy = leafletProxy("NEONprediction"), current_site)
+  mappredictions <-  reactive({
+    if(is.null(input$NEONprediction_marker_click)){
+      return(NA)
     } else{
-      print(paste("Current site is:",current_site,"Current zoom is:",current_zoom))
+      load_predictions(input$NEONprediction_marker_click$id)
     }
   })
   
-
-  
-
+  observe({
+    current_zoom <- mapzoom()
+    current_site <- mapsite()
+    current_predictions <- mappredictions()
     
+   if(current_zoom > 11){
+     if(current_zoom < 19){
+       leafletProxy("NEONprediction") %>% clearShapes() 
+       tree_density(leaflet_proxy = leafletProxy("NEONprediction"), current_site)
+     } else{
+       leafletProxy("NEONprediction") %>% clearImages()
+       neon_prediction(leaflet_proxy = leafletProxy("NEONprediction"), current_predictions)
+       output$HeightDistribution<-height_distribution(current_predictions, current_site)}
+     }
+     else{
+       leafletProxy("NEONprediction") %>% clearShapes() %>% clearImages()
+     }
+   })
+
+
   output$street_trees<-street_prediction()
 })
 

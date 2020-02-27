@@ -60,24 +60,27 @@ project_shp<-function(){
 
 project_shp()
 
-predictions_WREF <- sf::read_sf("data/NEON/2019_WREF_3_582000_5073000_image.shp")
-predictions_WREF<-predictions_WREF[,c("label","height")]
-predictions_WREF<-st_transform(predictions_WREF,crs=3857)
-
-predictions_ABBY <- sf::read_sf("data/NEON/2018_ABBY_2_557000_5065000_image.shp")
-predictions_ABBY<-predictions_ABBY[,c("label","height")]
-predictions_ABBY<-st_transform(predictions_ABBY,crs=3857)
-
-
 predictions_OSBS <- sf::read_sf("data/NEON/2018_OSBS_4_400000_3285000_image.shp")
 predictions_OSBS<-predictions_OSBS[,c("label","height")]
-predictions_OSBS<-st_transform(predictions_OSBS,crs=3857)
+#predictions_OSBS<-st_transform(predictions_OSBS,crs=3857)
 
-utm_10m<-rbind(predictions_WREF,predictions_ABBY,predictions_OSBS)
-#utm_10m<-st_transform(utm_10m,crs=3857)
-write_sf(utm_10m,"data/NEON/utm10_crossOSBS.shp",driver="ESRI SHAPEFILE")
-
-mapview(utm_10m)
+## Tree Density Raster
+available_shp<-list.files("data/NEON",pattern=".shp",full.names = T)
+for(x in available_shp){
+  #create tile 
+  predictions <- read_sf(x)
+  g<-raster(predictions)
+  res(g)<-200
+  predictions<-st_centroid(predictions)
+  predictions$id<-as.character(1:nrow(predictions))
+  g<-rasterize(predictions,g,
+               field="id",
+               fun = function (x, ...) length(unique(na.omit(x))))
+  g<-projectRaster(g,crs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
+  tilename <- str_match(x,"(\\w+).shp")[,2]
+  tilename <- paste("data/NEON/rasters/",tilename,"_raster.tif",sep="")
+  writeRaster(g,tilename,overwrite=T)
+}
 
 
 #Project and merge mapbox tiles

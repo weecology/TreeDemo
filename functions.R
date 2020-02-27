@@ -146,30 +146,30 @@ predict_image<-function(local_path){
 }
 
 #Neon prediction
-
-neon_prediction<-function(leaflet_proxy, site_name="OSBS"){
-  
-  available_shp<-list.files("data/NEON/",pattern=".shp",full.names = T)
-  site_shp <- available_shp[str_detect(available_shp,site_name)]
-  predictions<-read_sf(site_shp)
-  predictions<-st_transform(predictions,"+proj=longlat +datum=WGS84 +no_defs")
-  
+neon_prediction<-function(leaflet_proxy, predictions){
   #Set view
-  #tree_extent<-extent(predictions)
-  #x_location <- mean(c(as.numeric(tree_extent@xmax),as.numeric(tree_extent@xmin)))
-  #y_location <- mean(c(as.numeric(tree_extent@ymax),as.numeric(tree_extent@ymin)))
-  #setView(zoom=19,lng=x_location,lat=y_location)
   neon_map <- leaflet_proxy %>% addPolylines(data=predictions,color="red",weight=2)
-  
   return(neon_map)
 }
 
-height_distribution <- function(site_name="OSBS"){
+#Tree density raster
+tree_density<-function(leaflet_proxy,current_site){
+  available_tif<-list.files("data/NEON/rasters/",pattern="tif",full.names = T)
+  site_tif <- available_tif[str_detect(available_tif,current_site)]
+  site_tif<-raster(site_tif)
+  leaflet_proxy %>% addRasterImage(site_tif,opacity = 0.2,colors="Blues")
+}
+
+load_predictions<-function(site_name="OSBS"){
   available_shp<-list.files("data/NEON/",pattern=".shp",full.names = T)
   site_shp <- available_shp[str_detect(available_shp,site_name)]
   predictions<-read_sf(site_shp)
   predictions<-st_transform(predictions,"+proj=longlat +datum=WGS84 +no_defs")
-  p<-ggplot(predictions) + geom_histogram(aes(x=height)) + labs(x="Height (m)") + ggtitle(paste("Estimated Height Distribution (n=",nrow(predictions),")",sep=""))
+  return(predictions)
+  }
+
+height_distribution <- function(predictions, current_site){
+  p<-ggplot(predictions) + geom_histogram(aes(x=height)) + labs(x="Height (m)") + ggtitle(paste(current_site," n=",nrow(predictions),sep=""))
   return(renderPlot(p))
 }
 
