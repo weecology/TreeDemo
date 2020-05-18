@@ -68,9 +68,7 @@ shinyServer(function(input, output) {
   observeEvent(input$uploaded_image, {
     print("Observed upload")
     inFile <- input$uploaded_image
-    # if (is.null(inFile)){
-    #   return()
-    # }
+    
     print(inFile)
     local_path <- file.path("upload", inFile$name)
     file.copy(inFile$datapath, local_path)
@@ -78,13 +76,12 @@ shinyServer(function(input, output) {
     #Load model and predict
     save_path<-predict_image(local_path)
     
-    #View prediction
-    p<-renderImage({
-      list(src=save_path)
-    })
+    print(save_path)
     
-    #Assign to shiny object
-    output$prediction_plot<-p
+    #View prediction
+    output$prediction_plot<-renderImage({
+      list(src=save_path,alt="Alternate text",height=600,width=600)
+    },deleteFile = FALSE)
   })
   
   ### NEON Predictions ###
@@ -135,7 +132,7 @@ shinyServer(function(input, output) {
    if(current_zoom > 11){
      if(current_zoom < 19){
        leafletProxy("NEONprediction") %>% clearShapes() 
-       tree_density(leaflet_proxy = leafletProxy("NEONprediction"), current_site)
+       #tree_density(leaflet_proxy = leafletProxy("NEONprediction"), current_site)
      } else{
        leafletProxy("NEONprediction") %>% clearImages()
        neon_prediction(leaflet_proxy = leafletProxy("NEONprediction"), current_predictions)

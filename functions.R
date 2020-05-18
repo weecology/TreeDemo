@@ -153,12 +153,12 @@ neon_prediction<-function(leaflet_proxy, predictions){
 }
 
 #Tree density raster
-tree_density<-function(leaflet_proxy,current_site){
-  available_tif<-list.files("data/NEON/rasters/",pattern="tif",full.names = T)
-  site_tif <- available_tif[str_detect(available_tif,current_site)]
-  site_tif<-raster(site_tif)
-  leaflet_proxy %>% addRasterImage(site_tif,opacity = 0.2,colors="Blues")
-}
+# tree_density<-function(leaflet_proxy,current_site){
+#   available_tif<-list.files("data/NEON/rasters/",pattern="tif",full.names = T)
+#   site_tif <- available_tif[str_detect(available_tif,current_site)]
+#   site_tif<-raster(site_tif)
+#   leaflet_proxy %>% addRasterImage(site_tif,opacity = 0.2,colors="Blues")
+# }
 
 load_predictions<-function(site_name="OSBS"){
   available_shp<-list.files("data/NEON/",pattern=".shp",full.names = T)

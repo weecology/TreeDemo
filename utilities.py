@@ -13,7 +13,7 @@ def prediction_wrapper(image_path, save_dir ="predictions"):
         
         # Predict and save image
         prediction = model.predict_image(image_path, return_plot=True)
-        prediction_name = os.path.splitext(image_path)[0] + "_prediction.jpg"
+        prediction_name = os.path.basename(os.path.splitext(image_path)[0]) + "_prediction.jpg"
         save_path = os.path.join(save_dir,prediction_name)
         cv2.imwrite(save_path,prediction)
         

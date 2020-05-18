@@ -9,7 +9,6 @@ upload_page<-function(){
       fluidRow( 
         fileInput("uploaded_image", "Upload an Image", accept = c('image/png', 'image/jpeg',"image/tiff"))
       ),
-      textOutput("model_loading"),
       imageOutput("prediction_plot")
     )
   })
