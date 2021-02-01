@@ -42,7 +42,6 @@ drape_cloud<-function(){
 drape_cloud()
 
 #project into longlat
-
 project_shp<-function(){
   available_shp<-list.files("data/NEON/",pattern=".shp",full.names = T)
   prediction_list<-list()
@@ -59,42 +58,3 @@ project_shp<-function(){
 }
 
 project_shp()
-
-predictions_OSBS <- sf::read_sf("data/NEON/2018_OSBS_4_400000_3285000_image.shp")
-predictions_OSBS<-predictions_OSBS[,c("label","height")]
-#predictions_OSBS<-st_transform(predictions_OSBS,crs=3857)
-
-## Tree Density Raster
-available_shp<-list.files("data/NEON",pattern=".shp",full.names = T)
-for(x in available_shp){
-  #create tile 
-  predictions <- read_sf(x)
-  g<-raster(predictions)
-  res(g)<-200
-  predictions<-st_centroid(predictions)
-  predictions$id<-as.character(1:nrow(predictions))
-  g<-rasterize(predictions,g,
-               field="id",
-               fun = function (x, ...) length(unique(na.omit(x))))
-  g<-projectRaster(g,crs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
-  tilename <- str_match(x,"(\\w+).shp")[,2]
-  tilename <- paste("data/NEON/rasters/",tilename,"_raster.tif",sep="")
-  writeRaster(g,tilename,overwrite=T)
-}
-
-
-#Project and merge mapbox tiles
-available_tif<-list.files("/Users/ben/Dropbox/Weecology/mapbox",pattern=".tif",full.names = T)
-
-#Project to web mercator and merge
-r<-raster::stack(available_tif[1])
-f<-raster::stack(available_tif[2])
-proj_f<-projectRaster(f,crs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
-d<-merge(proj_r,proj_f)
-
-for(path in available_tif[2:length(available_tif)]){
-  
-}
-
-
-  

@@ -64,6 +64,7 @@ bash ~/miniconda.sh -b -p ~/miniconda
 #download TreeDemo data
 cd ~/TreeDemo
 
+#install conda env
 #reset thumbnails see preprocces.R
 
 

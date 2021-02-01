@@ -15,6 +15,7 @@ shinyUI(fluidPage(theme = shinytheme("readable"),
   #Navbar to each page
   navbarPage("Airborne Tree Detection Demo",
              tabPanel("Explore",uiOutput('explore')),
+             tabPanel("Annotate",uiOutput('annotation_page')),
              tabPanel("Upload",uiOutput('upload')),
              tabPanel("NEON Predictions",uiOutput('NEON')),
              tabPanel("Portland Street Trees",uiOutput('street_page')),

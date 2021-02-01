@@ -7,3 +7,4 @@ data/evaluation/
 *.wpr
 .wpu
 *.jpeg
+.Rproj.user

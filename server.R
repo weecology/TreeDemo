@@ -5,6 +5,7 @@
 library(shiny)
 library(dplyr)
 source("functions.R")
+source("annotation_functions.R")
 
 options(shiny.sanitize.errors = FALSE)
 
@@ -14,6 +15,7 @@ source("explore.R")
 source("upload.R")
 source("NEONPage.R")
 source("StreetTreesPage.R")
+source("AnnotationPage.R")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -24,7 +26,7 @@ shinyServer(function(input, output) {
   output$upload<-upload_page()
   output$NEON<-NEON_page()
   output$street_page<-street_page()
-  
+  output$annotation_page<-AnnotationPage()
   ### Explore ###
   
   #Field site maps
@@ -84,9 +86,19 @@ shinyServer(function(input, output) {
     },deleteFile = FALSE)
   })
   
-
-
   output$street_trees<-street_prediction()
+  
+  ##Annotation page
+  reactive(input$annotation_plotID,{
+    output$annotation_rgb <- annotation_plot(output$annotation_plotID)
+    output$annotation_lidar <- annotation_lidar(output$annotation_plotID)
+    output$annotation_chm <- annotation_chm(output$annotation_plotID)
+    output$annotation_HSI <- annotation_hsi(output$annotation_plotID)
+  })
+  
+  
+
+  
 })
 
 
