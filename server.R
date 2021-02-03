@@ -90,7 +90,6 @@ shinyServer(function(input, output) {
   output$street_trees<-street_prediction()
   
   
-  
   ##Annotation page
   selected_field_data<-reactive({
     selected_plotID <- strsplit(input$annotation_plotID,"\\.")[[1]][1]
