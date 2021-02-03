@@ -83,7 +83,7 @@ annotation_leaflet<-function(plotID, field_data){
   st_crs(pts) <- st_crs(r)
   pts<-st_transform(pts,"EPSG:4326")
   
-  pts$label <- paste(pts$taxonID, pts$individualID, pts$height, collapse = "<br/>")
+  pts$label <- paste(pts$scientificName, pts$individualID, pts$height, sep = "<br/>")
 
   leaflet(data=pts)  %>% addMarkers(popup = ~label) %>% 
     addLayersControl(position = "topleft", baseGroups = c("rgb", "hsi","Canopy Height Model"), options = layersControlOptions(collapsed = F)) %>% 
