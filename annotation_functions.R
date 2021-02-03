@@ -3,6 +3,7 @@ library(sf)
 library(dplyr)
 library(leaflet)
 library(lidR)
+library(leafem)
 
 get_data <- function(plot_name, type) {
   

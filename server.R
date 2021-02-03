@@ -5,6 +5,8 @@
 library(shiny)
 library(dplyr)
 library(leaflet)
+library(leafem)
+
 source("functions.R")
 source("annotation_functions.R")
 
