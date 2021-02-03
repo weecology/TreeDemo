@@ -124,7 +124,7 @@ shinyServer(function(input, output) {
     leafletProxy("annotation_hsi") %>%
       addRasterRGB(g, r=1,g=2,b=3, group="hsi",project=F)
       
-  }, ignoreInit =TRUE)
+  }, ignoreInit =TRUE, ignoreNULL = T)
   
 })
 
