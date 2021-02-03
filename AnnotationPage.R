@@ -1,5 +1,11 @@
-#About page UI
-plotIDs = list.files("data/evaluation/RGB/",pattern=".tif")
+#Annotation page UI
+library(stringr)
+
+#Available plots to annotate
+plotIDs <- list.files("data/evaluation/RGB/",pattern=".tif")
+plotIDs <- plotIDs[!str_detect(plotIDs,"competition")]
+field_data <- read.csv("data/filtered_data.csv")
+plotIDs <- plotIDs[plotIDs %in% paste(unique(field_data$plotID),"tif",sep=".")]
 
 AnnotationPage<-function(){
   renderUI({
@@ -7,7 +13,23 @@ AnnotationPage<-function(){
       titlePanel("Annotation Environment"),
       p("The National Ecological Observatory Network collects airborne and forestry data across the United States. Our goal is to turn those surveys into ecological information on individual trees.To do that we must build and validate model of tree detection and classification. This page provides supplamental information for the Tree Crown Detection Zooniverse project"),
       selectizeInput("annotation_plotID", "plotID", plotIDs, selected = "SJER_052.tif", multiple = FALSE,options = NULL),
-      leafletOutput("annotation_hsi",height="800"),
+      splitLayout(
+      # Input: Simple integer interval ----
+      sliderInput("HSI_band_1", "HSI band 1:",
+                  min = 0, max = 369,
+                  value = 55),
+      
+      # Input: Decimal interval with step value ----
+      sliderInput("HSI_band_2", "HSI band 2:",
+                  min = 0, max = 369,
+                  value = 117),
+      
+      # Input: Specification of range within an interval ----
+      sliderInput("HSI_band_3", "HSI band 3:",
+                  min = 0, max = 369,
+                  value = 180)),
+      
+      leafletOutput("annotation_hsi",height="700"),
       rglwidgetOutput("annotation_lidar",height='500')
       )})
 }

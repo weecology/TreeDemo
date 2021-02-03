@@ -4,6 +4,7 @@
 
 library(shiny)
 library(dplyr)
+library(leaflet)
 source("functions.R")
 source("annotation_functions.R")
 
@@ -28,7 +29,7 @@ shinyServer(function(input, output) {
   output$street_page<-street_page()
   output$annotation_page<-AnnotationPage()
   ### Explore ###
-  field_data <- read.csv("data/neon_vst_data_2021.csv")
+  field_data <- read.csv("data/filtered_data.csv")
   #Field site maps
   output$map <- create_map()
   
@@ -93,12 +94,36 @@ shinyServer(function(input, output) {
   ##Annotation page
   selected_field_data<-reactive({
     selected_plotID <- strsplit(input$annotation_plotID,"\\.")[[1]][1]
+    print(selected_plotID)
     field_data <- field_data %>% filter(plotID==selected_plotID)
     return(field_data)
   })
 
+  #HSI bands
+  hsi_bands <- reactive({
+    c(input$HSI_band_1, input$HSI_band_2, input$HSI_band_3)
+  })
+  
   output$annotation_lidar <-   renderRglwidget(annotation_lidar(input$annotation_plotID))
   output$annotation_hsi <- renderLeaflet(annotation_leaflet(input$annotation_plotID, selected_field_data()))
+  
+  #Update HSI bands
+  observeEvent(hsi_bands(), {
+    field_data<-selected_field_data()
+    selected_plotID <-  unique(field_data$plotID)
+    path<-get_data(selected_plotID,"hyperspectral")
+    r <- stack(path)
+    g<-r[[hsi_bands()]]
+    
+    #hotfix, Set crs from rgb, todo hsi needs crs.
+    path<-get_data(selected_plotID,"rgb")
+    r <- stack(path)
+    crs(g)<-crs(r)
+    
+    leafletProxy("annotation_hsi") %>%
+      addRasterRGB(g, r=1,g=2,b=3, group="hsi",project=F)
+      
+  }, ignoreInit =TRUE)
   
 })
 
