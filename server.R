@@ -28,7 +28,7 @@ shinyServer(function(input, output) {
   output$street_page<-street_page()
   output$annotation_page<-AnnotationPage()
   ### Explore ###
-  
+  field_data <- read.csv("data/neon_vst_data_2021.csv")
   #Field site maps
   output$map <- create_map()
   
@@ -88,16 +88,17 @@ shinyServer(function(input, output) {
   
   output$street_trees<-street_prediction()
   
+  
+  
   ##Annotation page
-  reactive(input$annotation_plotID,{
-    output$annotation_rgb <- annotation_plot(output$annotation_plotID)
-    output$annotation_lidar <- annotation_lidar(output$annotation_plotID)
-    output$annotation_chm <- annotation_chm(output$annotation_plotID)
-    output$annotation_HSI <- annotation_hsi(output$annotation_plotID)
+  selected_field_data<-reactive({
+    selected_plotID <- strsplit(input$annotation_plotID,"\\.")[[1]][1]
+    field_data <- field_data %>% filter(plotID==selected_plotID)
+    return(field_data)
   })
-  
-  
 
+  output$annotation_lidar <-   renderRglwidget(annotation_lidar(input$annotation_plotID))
+  output$annotation_hsi <- renderLeaflet(annotation_leaflet(input$annotation_plotID, selected_field_data()))
   
 })
 
