@@ -109,22 +109,24 @@ shinyServer(function(input, output) {
   output$annotation_hsi <- renderLeaflet(annotation_leaflet(input$annotation_plotID, selected_field_data()))
   
   #Update HSI bands
-  observeEvent(hsi_bands(), {
-    field_data<-selected_field_data()
-    selected_plotID <-  unique(field_data$plotID)
-    path<-get_data(selected_plotID,"hyperspectral")
-    r <- stack(path)
-    g<-r[[hsi_bands()]]
-    
-    #hotfix, Set crs from rgb, todo hsi needs crs.
-    path<-get_data(selected_plotID,"rgb")
-    r <- stack(path)
-    crs(g)<-crs(r)
-    
-    leafletProxy("annotation_hsi") %>%
-      addRasterRGB(g, r=1,g=2,b=3, group="hsi",project=F)
+  observeEvent(ignoreInit =TRUE, hsi_bands(), {
+    if(!sum(hsi_bands()==c(11,55,113))==3){
+      field_data<-selected_field_data()
+      selected_plotID <-  unique(field_data$plotID)
+      path<-get_data(selected_plotID,"hyperspectral")
+      r <- stack(path)
+      g<-r[[hsi_bands()]]
       
-  }, ignoreInit =TRUE, ignoreNULL = T)
+      #hotfix, Set crs from rgb, todo hsi needs crs.
+      path<-get_data(selected_plotID,"rgb")
+      r <- stack(path)
+      crs(g)<-crs(r)
+      
+      leafletProxy("annotation_hsi") %>%
+        addRasterRGB(g, r=1,g=2,b=3, group="hsi",project=F)
+    } 
+
+  })
   
 })
 

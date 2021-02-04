@@ -111,10 +111,9 @@ annotation_leaflet<-function(plotID, field_data, hsi_layers=c(55,117,180)){
     use_CHM=FALSE
   }
   
-  map <- leaflet(data=pts) %>%
+  map <- leaflet(data=pts) %>% 
     addLayersControl(position = "bottomleft", baseGroups =groups, options = layersControlOptions(collapsed = F)) %>% 
-    addCircleMarkers(popup = ~label,radius=3,opacity=0.9,color="red") %>% 
-    addRasterRGB(r, r=1,g=2,b=3, group="rgb",project=F)
+    addCircleMarkers(popup = ~label,radius=3,opacity=0.9,color="red") 
  
   if(use_CHM){
     map<-map %>%
@@ -124,6 +123,9 @@ annotation_leaflet<-function(plotID, field_data, hsi_layers=c(55,117,180)){
   if(use_HSI){
     map<-map %>% addRasterRGB(g, r=1,g=2,b=3, group="Hyperspectral",project=F)
   }
+  
+  #Add rgb last to be on top
+  map <- map %>% addRasterRGB(r, r=1,g=2,b=3, group="rgb",project=F) %>% showGroup("rgb")
   
   return(map)
   }

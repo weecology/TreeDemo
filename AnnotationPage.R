@@ -13,21 +13,21 @@ AnnotationPage<-function(){
       titlePanel("Annotation Environment"),
       p("The National Ecological Observatory Network collects airborne and forestry data across the United States. Our goal is to turn those surveys into ecological information on individual trees.To do that we must build and validate model of tree detection and classification. This page provides supplamental information for the Tree Crown Detection Zooniverse project"),
       selectizeInput("annotation_plotID", "plotID", plotIDs, selected = "SJER_052.tif", multiple = FALSE,options = NULL),
-      splitLayout(
+      fluidRow(
       # Input: Simple integer interval ----
-      sliderInput("HSI_band_1", "HSI band 1:",
+      column(1,sliderInput("HSI_band_1", "HSI band 1:",
                   min = 0, max = 369,
-                  value = 55),
+                  value = 11)),
       
       # Input: Decimal interval with step value ----
-      sliderInput("HSI_band_2", "HSI band 2:",
+      column(1,sliderInput("HSI_band_2", "HSI band 2:",
                   min = 0, max = 369,
-                  value = 117),
+                  value = 55)),
       
       # Input: Specification of range within an interval ----
-      sliderInput("HSI_band_3", "HSI band 3:",
+      column(1,sliderInput("HSI_band_3", "HSI band 3:",
                   min = 0, max = 369,
-                  value = 180)),
+                  value = 113))),
       
       leafletOutput("annotation_hsi",height="700"),
       rglwidgetOutput("annotation_lidar",height='500')
