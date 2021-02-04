@@ -21,16 +21,16 @@ AnnotationPage<-function(){
                   value = 11)),
       
       # Input: Decimal interval with step value ----
-      column(1,sliderInput("HSI_band_2", "HSI band 2:",
+      column(2,sliderInput("HSI_band_2", "HSI band 2:",
                   min = 0, max = 369,
                   value = 55)),
       
       # Input: Specification of range within an interval ----
-      column(1,sliderInput("HSI_band_3", "HSI band 3:",
+      column(3,sliderInput("HSI_band_3", "HSI band 3:",
                   min = 0, max = 369,
                   value = 113))),
       
-      rglwidgetOutput("annotation_lidar",height='500')
+      rglwidgetOutput("annotation_lidar",height='600')
       )})
 }
 
