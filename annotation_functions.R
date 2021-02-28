@@ -101,7 +101,7 @@ annotation_leaflet<-function(plotID, field_data, hsi_layers=c(55,117,180)){
     st_crs(pts) <- st_crs(r)
     pts<-st_transform(pts,"EPSG:4326")
     
-    pts$label <- paste(pts$scientificName, pts$individualID, pts$height, pts$canopyPosition, sep = "<br/>")
+    pts$label <- paste(pts$scientificName, pts$individualID, pts$height, pts$canopyPosition, pts$plantStatus, sep = "<br/>")
     
     pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), values(laz),
                         na.color = "transparent")

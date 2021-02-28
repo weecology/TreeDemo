@@ -1,4 +1,4 @@
-name: Zooniverse
+name: Tree_Zooniverse
 channels: 
   - defaults
 dependencies:

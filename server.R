@@ -41,7 +41,7 @@ shinyServer(function(input, output) {
   
   #Default selected image
   #Lidar plot
-  current_plot_name<-"TEAK_058"
+  current_plot_name<-"TEAK_058_2018"
   output$lidar<-plot_lidar(current_plot_name)
   output$rgb<-plot_rgb(current_plot_name)
   
