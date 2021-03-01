@@ -94,7 +94,7 @@ shinyServer(function(input, output) {
   
   ##Annotation page
   selected_field_data<-reactive({
-    selected_plotID <- strsplit(input$annotation_plotID,"\\.")[[1]][1]
+    selected_plotID <- str_match(input$annotation_plotID,"(\\w+)_\\d+.tif")[,2]
     print(selected_plotID)
     field_data <- field_data %>% filter(plotID==selected_plotID)
     return(field_data)
