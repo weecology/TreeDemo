@@ -20,16 +20,21 @@ def find_plots(RGB_dir, save_dir):
     unique_plots = field_data.plotID.unique()
     
     image_paths = glob.glob(os.path.join(RGB_dir, "*.tif"))
-    selected_plots = [x for x in image_paths if os.path.splitext(os.path.basename(x))[0] in unique_plots]
+    selected_plots = [x for x in image_paths if "_".join(os.path.splitext(os.path.basename(x))[0].split("_")[:-1]) in unique_plots]
     
     #Prioritize plots not already annotated
     already_annotated = glob.glob("../data/annotations/*.xml")
     already_annotated =  [os.path.splitext(os.path.basename(x))[0] for x in already_annotated]
-    
     to_be_annotated = [x for x in selected_plots if not os.path.splitext(os.path.basename(x))[0] in already_annotated]
-    index = np.random.choice(len(to_be_annotated),10)
-    to_be_annotated = np.array(to_be_annotated)[index]
-                         
+    
+    #not part of demo training upload
+    demo_upload = ["TEAK_045_2019","KONZ_024_2020","UKFS_004_2020","STEI_004_2020","ABBY_070_2019","HARV_002_2019","HARV_005_2019","WREF_080_2018","BART_006_2019"]
+    to_be_annotated = [x for x in to_be_annotated if not os.path.splitext(os.path.basename(x))[0] in demo_upload]
+    
+    #index = np.random.choice(len(to_be_annotated),10)
+    #to_be_annotated = np.array(to_be_annotated)[index]
+    
+    # remove 
     images = {}
     counter = 1
 
@@ -101,4 +106,4 @@ if __name__ == "__main__":
     #auth
     zooniverse_project = connect()
     
-    main(zooniverse_project, RGB_dir="../data/evaluation/RGB/", save_dir="temp/")
+    main(zooniverse_project, RGB_dir="/Users/benweinstein/Documents/NeonTreeEvaluation/evaluation/RGB/", save_dir="temp/")
