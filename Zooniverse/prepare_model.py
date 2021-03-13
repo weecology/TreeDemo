@@ -3,7 +3,7 @@
 
 import os
 import pandas as pd
-import copy
+from shutil import copyfile
 from parse_annotations import run
 
 def get_plotID(x):
@@ -19,8 +19,8 @@ def get_image_name(x):
     
     return image_name
     
-def copy_image(image_path):
-    copy.copy(x, "/orange/ewhite/b.weinstein/NeonTreeEvaluation/hand_annotations/{}".format(image_path))
+def copy_image(image_path, basename):
+    copyfile("/orange/idtrees-collab/NeonTreeEvaluation/evaluation/RGB/{}.tif".format(image_path), "/orange/ewhite/b.weinstein/NeonTreeEvaluation/hand_annotations/{}.tif".format(basename))
     
 ## Download shapefiles to directory
 files_created = run(download=True, generate=True, savedir="/orange/ewhite/b.weinstein/NeonTreeEvaluation/hand_annotations/")
@@ -31,11 +31,12 @@ for x in files_created:
     plotID = get_plotID(x)
     benchmark = pd.read_csv("/orange/idtrees-collab/NeonTreeEvaluation/evaluation/RGB/benchmark_annotations.csv")
     
-    benchmark["plotID"] = benchmark.image_path.apply(lambda x: os.path.splitext(os.path.basename(x)))
-    in_test = plotID in benchmark["plotID"]
+    benchmark["plotID"] = benchmark.image_path.apply(lambda x: "_".join(x.split("_")[0:2]))
+    in_test = plotID in benchmark["plotID"].values
     
     if in_test:
         os.remove(x)
     else:
         image_path = get_image_name(x)
-        copy_image(image_path)
+        basename = os.path.splitext(os.path.basename(x))[0]
+        copy_image(image_path, basename)
