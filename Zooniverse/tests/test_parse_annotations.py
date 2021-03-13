@@ -26,7 +26,7 @@ def test_parse_trees(project):
     
     
 def test_run(project, tmpdir):
-    parse_annotations.run(min_version=30.36, debug=False, download=True, savedir=tmpdir)
+    parse_annotations.run(min_version=30.36, debug=True, download=True, savedir=tmpdir)
     os.path.exists("{}/parsed_annotations.csv".format(tmpdir))
     os.path.exists("{}/TreeCrownDetection.csv".format(tmpdir))
     shps = glob.glob("{}/*.shp".format(tmpdir))

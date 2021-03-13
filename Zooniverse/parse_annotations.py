@@ -227,15 +227,17 @@ def run(classifications_file=None, savedir=".", download=False, generate=False,m
     #Write parsed data
     df.to_csv("{}/{}.csv".format(savedir, "parsed_annotations"),index=True)
     
+    files_created = []
     for name, group in df.groupby("classification_id"):
         print()
         projected_box = project_box(group)
         fname = "{}/{}_{}.shp".format(savedir,projected_box.image_name.unique()[0],name)
         print(fname)
         projected_box.to_file(fname)
+        files_created.append(fname)
+    
+    return files_created
 
 if __name__ == "__main__":
     #Download from Zooniverse and parse
-    
-    fname = run(savedir="results/", download=True, 
-       generate=False, min_version= 30.36)
+    run(min_version=30.36, debug=False, generate=False, download=True, savedir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse")
