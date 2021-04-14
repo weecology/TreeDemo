@@ -87,12 +87,11 @@ def split_train_test(annotations, client, iterations=1):
 
 
 def run(input_dir, client, save_dir, iterations=1):
-    df = load_shapefiles(input_dir)
-    train, test = split_train_test(annotations=df, client=client, iterations = iterations)
-    train.to_csv("{}/train.csv".format(save_dir))
+    test = load_shapefiles(input_dir)
+    #train, test = split_train_test(annotations=df, client=client, iterations = iterations)
     test.to_csv("{}/test.csv".format(save_dir))
     
-    return train, test
+    return test
 
 if __name__ == "__main__":
     client = start_cluster.start(cpus=20)
