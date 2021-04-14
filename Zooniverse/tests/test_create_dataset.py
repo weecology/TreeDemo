@@ -6,7 +6,7 @@ def test_load_shapefile():
     assert all([x in ["xmin","ymin","xmax","ymax","label"] for x in df.columns])
     
 def test_run(tmpdir):
-    train, test = create_species_dataset.run(input_dir="data", client=None, save_dir=tmpdir)
+    train, test = create_species_dataset.run(input_dir="data", client=None, save_dir=tmpdir, iterations=3)
     
     assert not train.empty
     assert not test.empty

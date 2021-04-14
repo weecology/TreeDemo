@@ -39,14 +39,10 @@ def sample_plots(shp):
     train = train[train.taxonID.isin(test.taxonID)]
     test = test[test.taxonID.isin(train.taxonID)]
     
-def split_train_test(annotations, client, debug=False):
+def split_train_test(annotations, client, iterations=1):
     """Split shapefile into balanced train and test"""
     
     most_species = 0
-    if debug:
-        iterations = 1
-    else:
-        iterations = 500
     
     if client:
         futures = [ ]
@@ -88,16 +84,16 @@ def split_train_test(annotations, client, debug=False):
     return train, test
 
 
-def run(input_dir, client, save_dir):
+def run(input_dir, client, save_dir, iterations=1):
     df = load_shapefiles(input_dir)
-    train, test = split_train_test(df, client)
+    train, test = split_train_test(annotations=df, client=client, iterations = iterations)
     train.to_csv("{}/train.csv".format(save_dir))
     test.to_csv("{}/test.csv".format(save_dir))
     
 
 if __name__ == "__main__":
     client = start_cluster.start(cpus=20)
-    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data/", savedir="/orange/idtrees-collab/DeepTreeAttention/data/", client=client)
+    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data/", savedir="/orange/idtrees-collab/DeepTreeAttention/data/", client=client, iterations=500)
     
 
     
