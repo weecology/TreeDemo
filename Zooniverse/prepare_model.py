@@ -23,7 +23,7 @@ def copy_image(image_path, basename):
     copyfile("/orange/idtrees-collab/NeonTreeEvaluation/evaluation/RGB/{}.tif".format(image_path), "/orange/ewhite/b.weinstein/NeonTreeEvaluation/hand_annotations/{}.tif".format(basename))
     
 ## Download shapefiles to directory
-files_created = run(download=True, generate=True, savedir="/orange/ewhite/b.weinstein/NeonTreeEvaluation/hand_annotations/")
+files_created = run(download=True, generate=False, savedir="/orange/ewhite/b.weinstein/NeonTreeEvaluation/hand_annotations/")
 
 ## Copy images to crops
 for x in files_created:
