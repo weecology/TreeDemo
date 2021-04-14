@@ -34,19 +34,17 @@ def sample_plots(shp):
     test = shp[shp.plotID.isin(test_plots)]
     train = shp[~shp.plotID.isin(test_plots)]
     
-    test = test.groupby("taxonID").filter(lambda x: x.shape[0] > 5)
+    test = test.groupby("label").filter(lambda x: x.shape[0] > 5)
     
-    train = train[train.taxonID.isin(test.taxonID)]
-    test = test[test.taxonID.isin(train.taxonID)]
+    train = train[train.label.isin(test.label)]
+    test = test[test.label.isin(train.label)]
     
-def split_train_test(annotations, client, debug=False):
+    return train, test
+    
+def split_train_test(annotations, client, iterations=1):
     """Split shapefile into balanced train and test"""
     
     most_species = 0
-    if debug:
-        iterations = 1
-    else:
-        iterations = 500
     
     if client:
         futures = [ ]
@@ -56,48 +54,49 @@ def split_train_test(annotations, client, debug=False):
         
         for x in as_completed(futures):
             train, test = x.result()
-            if len(train.taxonID.unique()) > most_species:
-                print(len(train.taxonID.unique()))
+            if len(train.label.unique()) > most_species:
+                print(len(train.label.unique()))
                 saved_train = train
                 saved_test = test
-                most_species = len(test.taxonID.unique())            
+                most_species = len(test.label.unique())            
     else:
         for x in np.arange(iterations):
             train, test = sample_plots(shp=annotations)
-            if len(train.taxonID.unique()) > most_species:
-                print(len(test.taxonID.unique()))
+            if len(train.label.unique()) > most_species:
+                print(len(test.label.unique()))
                 saved_train = train
                 saved_test = test
-                most_species = len(test.taxonID.unique())
+                most_species = len(test.label.unique())
     
     train = saved_train
     test = saved_test     
     
     print("There are {} records for {} species for {} sites in filtered train".format(
         train.shape[0],
-        len(train.taxonID.unique()),
+        len(train.label.unique()),
         len(train.siteID.unique())
     ))
     
     print("There are {} records for {} species for {} sites in test".format(
         test.shape[0],
-        len(test.taxonID.unique()),
+        len(test.label.unique()),
         len(test.siteID.unique())
     ))
     
     return train, test
 
 
-def run(input_dir, client, save_dir):
+def run(input_dir, client, save_dir, iterations=1):
     df = load_shapefiles(input_dir)
-    train, test = split_train_test(df, client)
+    train, test = split_train_test(annotations=df, client=client, iterations = iterations)
     train.to_csv("{}/train.csv".format(save_dir))
     test.to_csv("{}/test.csv".format(save_dir))
     
+    return train, test
 
 if __name__ == "__main__":
     client = start_cluster.start(cpus=20)
-    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data/", savedir="/orange/idtrees-collab/DeepTreeAttention/data/", client=client)
+    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data/", savedir="/orange/idtrees-collab/DeepTreeAttention/data/", client=client, iterations=1000)
     
 
     
