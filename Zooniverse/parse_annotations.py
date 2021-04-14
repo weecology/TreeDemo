@@ -240,4 +240,4 @@ def run(classifications_file=None, savedir=".", download=False, generate=False,m
 
 if __name__ == "__main__":
     #Download from Zooniverse and parse
-    run(min_version=30.36, debug=False, generate=False, download=True, savedir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse")
+    run(min_version=30.36, debug=False, generate=False, download=True, savedir="/orange/idtrees-collab/DeepTreeAttention/data")
