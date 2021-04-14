@@ -163,6 +163,9 @@ def parse_trees(df):
     for index, row in df.iterrows(): 
         #Extract annotations for each image
         crowns = parse_data(row.annotations)
+        
+        if crowns is None:
+            continue
 
         #Extract subject data
         metadata = parse_subject_data(row.subject_data)
