@@ -19,6 +19,7 @@ def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
         #lookup individualID
         gdf["taxonID"] = gdf.individualID.apply(lambda x: field_df[field_df.individualID==x].taxonID.unique()[0] if x is not None else x)
         gdf["label"] = gdf.Dead
+        gdf["label"] = gdf.label.apply(lambda x: "Dead" if x == 1 else "Alive")
         results.append(gdf)
     
     results = pd.concat(results)
@@ -27,7 +28,7 @@ def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
     return results  
 
 
-def run(input_dir, client, save_dir, iterations=1):
+def run(input_dir, save_dir, iterations=1, client=None):
     df = load_shapefiles(input_dir)
     
     df["image_path"] = df.image_name.apply(lambda x: "{}.tif".format(x))
@@ -50,5 +51,5 @@ def run(input_dir, client, save_dir, iterations=1):
 if __name__ == "__main__":
     #client = start_cluster.start(cpus=20)
     run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
-    
+    #run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
 
