@@ -13,7 +13,7 @@ def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
     results = []
     for x in fils:
         gdf = gpd.read_file(x)
-        gdf = gdf[["xmin","ymin","xmax","ymax","siteID","plotID","individual","Dead"]]
+        gdf = gdf[["xmin","ymin","xmax","ymax","siteID","plotID","individual","Dead","image_name"]]
         gdf = gdf.rename(columns={"individual":"individualID"})
         
         #lookup individualID
@@ -30,6 +30,7 @@ def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
 def run(input_dir, client, save_dir, iterations=1):
     df = load_shapefiles(input_dir)
     
+    df["image_path"] = df.image_name.apply(lambda x: "{}.tif".format(x))
     test_plots = df.plotID.drop_duplicates().sample(frac=0.10)
     
     test = df[df.plotID.isin(test_plots)]
@@ -38,6 +39,9 @@ def run(input_dir, client, save_dir, iterations=1):
     train = train[train.label.isin(test.label)]
     test = test[test.label.isin(train.label)]
     
+    #create image path column
+    
+    
     test.to_csv("{}/dead_test.csv".format(save_dir))
     train.to_csv("{}/dead_train.csv".format(save_dir))
     
@@ -45,6 +49,6 @@ def run(input_dir, client, save_dir, iterations=1):
 
 if __name__ == "__main__":
     #client = start_cluster.start(cpus=20)
-    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
+    run(input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", client=None)
     
 
