@@ -8,7 +8,6 @@ import start_cluster
 
 def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
     fils = glob.glob("{}/*.shp".format(input_dir))
-    field_df = pd.read_csv(field_data)
     
     results = []
     for x in fils:
@@ -17,9 +16,7 @@ def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
         gdf = gdf.rename(columns={"individual":"individualID"})
         
         #lookup individualID
-        gdf["taxonID"] = gdf.individualID.apply(lambda x: field_df[field_df.individualID==x].taxonID.unique()[0] if x is not None else x)
-        gdf["label"] = gdf.Dead
-        gdf["label"] = gdf.label.apply(lambda x: "Dead" if x == 1 else "Alive")
+        gdf["label"] = gdf.Dead.apply(lambda x: "Dead" if x == '1' else "Alive")
         results.append(gdf)
     
     results = pd.concat(results)
@@ -50,6 +47,6 @@ def run(input_dir, save_dir, iterations=1, client=None):
 
 if __name__ == "__main__":
     #client = start_cluster.start(cpus=20)
-    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
-    #run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
+    #run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
+    run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
 
