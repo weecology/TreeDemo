@@ -15,7 +15,8 @@ def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
         gdf = gdf[["xmin","ymin","xmax","ymax","siteID","plotID","individual","Dead","image_name"]]
         gdf = gdf.rename(columns={"individual":"individualID"})
         
-        #lookup individualID
+        #Dead is '1', None is '0' or NA
+        gdf["Dead"] = gdf.Dead.fillna(0)
         gdf["label"] = gdf.Dead.apply(lambda x: "Dead" if x == '1' else "Alive")
         results.append(gdf)
     
