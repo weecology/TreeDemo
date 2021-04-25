@@ -39,7 +39,7 @@ def run(input_dir, save_dir, iterations=1, client=None):
     
     #balance dataset
     train_dead_labels = train[train.label=="Dead"]
-    train_alive_labels = train[train.label=="Alive"].sample(n=train.label.value_counts()["Dead"]*3)
+    train_alive_labels = train[train.label=="Alive"].sample(n=train.label.value_counts()["Dead"])
     train_filtered = pd.concat([train_alive_labels, train_dead_labels])
 
     test.to_csv("{}/dead_test.csv".format(save_dir))
