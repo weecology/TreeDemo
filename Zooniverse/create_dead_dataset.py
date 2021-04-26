@@ -52,6 +52,6 @@ def run(input_dir, save_dir, iterations=1, client=None):
 
 if __name__ == "__main__":
     #client = start_cluster.start(cpus=20)
-    #run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
-    run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
+    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
+    #run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
 
