@@ -46,7 +46,7 @@ def run(input_dir, save_dir, iterations=1, client=None):
     balanced_train = pd.concat([balanced_train, train_alive_labels])
 
     test.to_csv("{}/dead_test.csv".format(save_dir))
-    train.to_csv("{}/dead_train.csv".format(save_dir))
+    balanced_train.to_csv("{}/dead_train.csv".format(save_dir))
     
     return test
 
