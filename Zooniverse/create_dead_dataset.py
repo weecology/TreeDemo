@@ -38,9 +38,12 @@ def run(input_dir, save_dir, iterations=1, client=None):
     train = train[train.label.isin(test.label)]
     test = test[test.label.isin(train.label)]
     
-    #balance dataset
-    #train_dead_labels = train[train.label=="Dead"]
-    #train_alive_labels = train[train.label=="Alive"].sample(n=train.label.value_counts()["Dead"])
+    #reduce imbalance in dataset
+    train_dead_labels = train[train.label=="Dead"]
+    train_alive_labels = train[train.label=="Alive"]
+    
+    balanced_train = pd.concat([train_dead_labels]*5)
+    balanced_train = pd.concat([balanced_train, train_alive_labels])
 
     test.to_csv("{}/dead_test.csv".format(save_dir))
     train.to_csv("{}/dead_train.csv".format(save_dir))
@@ -49,6 +52,6 @@ def run(input_dir, save_dir, iterations=1, client=None):
 
 if __name__ == "__main__":
     #client = start_cluster.start(cpus=20)
-    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
-    #run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
+    #run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
+    run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
 
