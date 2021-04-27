@@ -43,12 +43,12 @@ def run(input_dir, save_dir, iterations=1, client=None):
     train_alive_labels = train[train.label=="Alive"]
     
     #Just from the same images
-    train_alive_labels[train_alive_labels.image_name.isin(train_dead_labels.image_name)]
+    #train_alive_labels[train_alive_labels.image_name.isin(train_dead_labels.image_name)]
     
-    balanced_train = pd.concat([train_dead_labels, train_alive_labels.sample(n=train_dead_labels.shape[0])])
+    #balanced_train = pd.concat([train_dead_labels, train_alive_labels.sample(n=train_dead_labels.shape[0])])
 
     test.to_csv("{}/dead_test.csv".format(save_dir))
-    balanced_train.to_csv("{}/dead_train.csv".format(save_dir))
+    train.to_csv("{}/dead_train.csv".format(save_dir))
     
     return test
 
