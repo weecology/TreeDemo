@@ -26,27 +26,32 @@ def load_shapefiles(input_dir, field_data="data/neon_vst_data_2021.csv"):
     return results  
 
 
-def run(input_dir, save_dir, iterations=1, client=None):
-    df = load_shapefiles(input_dir)
-    
-    df["image_path"] = df.image_name.apply(lambda x: "{}.tif".format(x))
-    test_plots = df.plotID.drop_duplicates().sample(frac=0.10)
-    
-    test = df[df.plotID.isin(test_plots)]
-    train = df[~df.plotID.isin(test_plots)]
-        
-    train = train[train.label.isin(test.label)]
-    test = test[test.label.isin(train.label)]
-    
-    #reduce imbalance in dataset
-    train_dead_labels = train[train.label=="Dead"]
-    train_alive_labels = train[train.label=="Alive"]
-    
-    #Just from the same images
-    #train_alive_labels[train_alive_labels.image_name.isin(train_dead_labels.image_name)]
-    
-    #balanced_train = pd.concat([train_dead_labels, train_alive_labels.sample(n=train_dead_labels.shape[0]*2)])
 
+def validation_split(input_dir, save_dir, client=None, regenerate=False):
+    df = load_shapefiles(input_dir)
+    train = pd.read_csv("{}/train.csv")
+    test = pd.read_csv("{}/test.csv")
+    
+    df.image
+    
+def run(input_dir, save_dir, client=None, regenerate=False):
+    df = load_shapefiles(input_dir)
+    df["image_path"] = df.image_name.apply(lambda x: "{}.tif".format(x))    
+    
+    if regenerate:
+        test_plots = df.plotID.drop_duplicates().sample(frac=0.10, seed=1)
+        #validation_plots = test_plots.plotID.drop_duplicates().sample(frac=0.5, seed=1)
+        
+        test = df[df.plotID.isin(test_plots)]
+        train = df[~df.plotID.isin(test_plots)]
+        #validation = df[df.plotID.isin(validation_plots)]
+        
+    else:
+        test = pd.read_csv("{}/dead_test.csv".format(save_dir))
+        train = pd.read_csv("{}/dead_train.csv".format(save_dir))
+        #validation = df[~df.plotID.isin(pd.concat([test,train]).plotID.unique())]
+
+    #validation.to_csv("{}/dead_validation.csv".format(save_dir))    
     test.to_csv("{}/dead_test.csv".format(save_dir))
     train.to_csv("{}/dead_train.csv".format(save_dir))
     
