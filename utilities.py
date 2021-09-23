@@ -3,7 +3,7 @@ import os
 import cv2
 import pandas as pd
 import glob
-from deepforest import deepforest
+from deepforest import main
 
 def prediction_wrapper(image_path, save_dir ="predictions"):
         
