@@ -8,7 +8,7 @@ from deepforest import main
 def prediction_wrapper(image_path, save_dir ="predictions"):
         
         #Load a model
-        model = deepforest.deepforest()
+        model = main.deepforest()
         model.use_release()
         
         # Predict and save image
