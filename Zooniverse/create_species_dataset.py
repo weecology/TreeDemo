@@ -94,8 +94,8 @@ def run(input_dir, client, save_dir, iterations=1):
     return test
 
 if __name__ == "__main__":
-    #client = start_cluster.start(cpus=20)
-    run(input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse", save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse", client=None)
+    client = start_cluster.start(cpus=20, mem_size="5GB")
+    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data/", save_dir="/orange/idtrees-collab/DeepTreeAttention/data/", client=client, iterations=1000)
     
 
     

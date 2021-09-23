@@ -2,7 +2,6 @@ name: Tree_Zooniverse
 channels: 
   - defaults
 dependencies:
-  - python==3.7
   - geopandas
   - shapely
   - pandas
@@ -14,7 +13,7 @@ dependencies:
     - panoptescli
     - mapboxcli
     - rasterio
-    - deepforest
+    - deepforest-pytorch
     - comet_ml
     - paramiko
     - opencv-python

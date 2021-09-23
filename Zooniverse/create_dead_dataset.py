@@ -39,19 +39,19 @@ def run(input_dir, save_dir, client=None, regenerate=False):
     df["image_path"] = df.image_name.apply(lambda x: "{}.tif".format(x))    
     
     if regenerate:
-        test_plots = df.plotID.drop_duplicates().sample(frac=0.20, seed=1)
-        validation_plots = test_plots.plotID.drop_duplicates().sample(frac=0.5, seed=1)
+        test_plots = df.plotID.drop_duplicates().sample(frac=0.10, seed=1)
+        #validation_plots = test_plots.plotID.drop_duplicates().sample(frac=0.5, seed=1)
         
         test = df[df.plotID.isin(test_plots)]
         train = df[~df.plotID.isin(test_plots)]
-        validation = df[df.plotID.isin(validation_plots)]
+        #validation = df[df.plotID.isin(validation_plots)]
         
     else:
         test = pd.read_csv("{}/dead_test.csv".format(save_dir))
         train = pd.read_csv("{}/dead_train.csv".format(save_dir))
-        validation = df[~df.plotID.isin(pd.concat([test,train]).plotID.unique())]
+        #validation = df[~df.plotID.isin(pd.concat([test,train]).plotID.unique())]
 
-    validation.to_csv("{}/dead_validation.csv".format(save_dir))    
+    #validation.to_csv("{}/dead_validation.csv".format(save_dir))    
     test.to_csv("{}/dead_test.csv".format(save_dir))
     train.to_csv("{}/dead_train.csv".format(save_dir))
     
@@ -59,8 +59,6 @@ def run(input_dir, save_dir, client=None, regenerate=False):
 
 if __name__ == "__main__":
     #client = start_cluster.start(cpus=20)
-    #run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
-    run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/",
-        input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/",
-        regenerate=False)
+    run(input_dir="/orange/idtrees-collab/DeepTreeAttention/data", save_dir="/orange/idtrees-collab/DeepTreeAttention/data", client=None)
+    #run(save_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/", input_dir="/Users/benweinstein/Dropbox/Weecology/TreeDetectionZooniverse/")
 
