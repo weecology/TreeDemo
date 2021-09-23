@@ -24,7 +24,7 @@ def predict_all_images():
         loop through a dir and run all images to get bounding box predictions
         """
         #Read config
-        model = deepforest.deepforest()
+        model = main.deepforest()
         model.use_release()
         
         #read model
