@@ -33,7 +33,8 @@ def predict_all_images():
         for tif in tifs:
                 print(tif)
                 df = model.predict_image(path = tif, return_plot=False)
-                                
+                if df is None:
+                        continue
                 #save boxes
                 file_path = os.path.splitext(tif)[0] + ".csv"
                 df.to_csv(file_path)
