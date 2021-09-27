@@ -13,7 +13,6 @@ create_thumbnails<-function(){
   #find all tifs
   all_tifs<-list.files("data/evaluation/RGB/",recursive = T,pattern=".tif",full.names = T)
   for(x in all_tifs){
-    print(x)
     img <- readTIFF(x, native=TRUE)
     plot_name = str_match(x,"(\\w+).tif")[,2]
     new_path = paste("www/",plot_name,".jpeg",sep="") 
