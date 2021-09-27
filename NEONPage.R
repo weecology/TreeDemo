@@ -7,7 +7,7 @@ NEON_page<-function(){
       p("To change sites select from the first dropdown menu on the left"),
       tags$iframe(
         seamless = "seamless", 
-        src = "http://tree.westus.cloudapp.azure.com:8080/ext/visus/viewer.html?", 
+        src = "http://weecology.westus.cloudapp.azure.com:8080/ext/visus/viewer.html?", 
         height = 1000, width = 1400
       ),
       #leafletOutput("NEONprediction", height=1000),
